@@ -1,0 +1,7 @@
+---
+- name: Playbook for windows based systems
+  hosts: windows_servers
+
+  roles:
+    - windows-docker
+...

@@ -1,0 +1,16 @@
+---
+- name: Checking for docker service
+  win_service:
+    name: "{{ docker_package }}"
+  register: docker_service_info
+
+- name: Registering docker service
+  win_shell: "C:\\ProgramData\\chocolatey\\lib\\docker\\tools\\docker\\dockerd.exe --register-service"
+  # If jinja templating is use against "when" a warning is issued. Thus used docker_service_enabled | bool which is safe.
+  when: docker_service_enabled | bool and not docker_service_info['exists']
+
+- name: Ensuring docker service is started
+  win_service:
+    name: "{{ docker_package }}"
+    state: "{{ docker_service_state }}"
+...
