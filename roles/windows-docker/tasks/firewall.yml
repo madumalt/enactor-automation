@@ -1,5 +1,5 @@
 ---
-- name: Configuring windows firewall
+- name: Configuring windows firewall.
   win_firewall_rule:
     name: "docker engine"
     direction: "in"

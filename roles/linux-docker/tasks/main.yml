@@ -5,13 +5,13 @@
 - include_tasks: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
-- name: Install Docker.
+- name: Install docker.
   package:
     name: "{{ docker_package }}"
     state: "{{ docker_package_state }}"
   notify: restart docker
 
-- name: Ensure Docker is started and enabled at boot.
+- name: Ensure docker is started and enabled at boot.
   service:
     name: docker
     state: "{{ docker_service_state }}"

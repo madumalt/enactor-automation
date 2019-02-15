@@ -1,5 +1,5 @@
 ---
-- name: Installing docker-compose
+- name: Installing docker-compose.
   win_chocolatey:
     name: docker-compose
     state: present

@@ -1,5 +1,5 @@
 ---
-- name: Enabling Containers feature
+- name: Enabling Containers feature.
   win_feature:
     name: Containers
     state: present
