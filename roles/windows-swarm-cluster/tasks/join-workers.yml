@@ -1,0 +1,12 @@
+---
+- name: Join the pending Swarm worker nodes.
+  win_shell: docker swarm join
+        --listen-addr {{ ansible_host }}:{{ docker_swarm_port }}
+        --advertise-addr {{ ansible_host }}
+        --token "{{ swarm_worker_token.stdout }}"
+        {{ swarm_manager_address }}
+  changed_when: False
+  when: "docker_info.stdout.find('Swarm: active') == -1
+    and docker_info.stdout.find('Swarm: pending') == -1
+    and 'worker_nodes' in group_names"
+...

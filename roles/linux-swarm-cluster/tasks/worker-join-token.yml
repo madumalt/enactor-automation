@@ -1,0 +1,9 @@
+---
+- name: Get the worker join-token.
+  shell: docker swarm join-token -q worker
+  changed_when: False
+  register: swarm_worker_token
+  delegate_to: "{{ groups['manager_nodes'][0] }}"
+  delegate_facts: True
+  when: "'worker_nodes' in group_names"
+...

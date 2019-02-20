@@ -1,6 +1,6 @@
 ---
 - name: Playbook for windows based systems
-  hosts: windows_servers
+  hosts: worker_nodes
 
   roles:
     - windows-docker

@@ -1,0 +1,6 @@
+---
+- name: Check if "Swarm Mode" is enabled.
+  win_shell: docker info
+  changed_when: False
+  register: docker_info
+...

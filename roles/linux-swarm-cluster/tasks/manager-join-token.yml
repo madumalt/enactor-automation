@@ -1,0 +1,10 @@
+---
+- name: Get the manager join-token.
+  shell: docker swarm join-token -q manager
+  changed_when: False
+  register: swarm_manager_token
+  delegate_to: "{{ groups['manager_nodes'][0] }}"
+  delegate_facts: True
+  when: "'manager_nodes' in group_names
+    and inventory_hostname != groups['manager_nodes'][0]"
+...

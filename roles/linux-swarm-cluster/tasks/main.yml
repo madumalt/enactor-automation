@@ -1,0 +1,17 @@
+---
+- include: check-swarm-mode.yml
+
+- include: init-swarm-mode.yml
+
+- include: worker-join-token.yml
+
+- include: manager-join-token.yml
+
+- include: set-swarm-manager-address.yml
+
+- include: distribute-swarm-manager-address.yml
+
+- include: join-workers.yml
+
+- include: join-managers.yml
+...

@@ -7,4 +7,5 @@
     protocol: "TCP"
     localport: 2375
     state: "present"
+  when: docker_package_state == 'present'
 ...

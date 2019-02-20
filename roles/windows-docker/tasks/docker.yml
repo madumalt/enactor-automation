@@ -1,6 +1,14 @@
 ---
-- name: Installing docker.
-  win_chocolatey:
-    name: "{{ docker_package }}"
-    state: "{{ docker_package_state }}"
+- name: Add DockerMsftProviderInsider powershell module repository
+  win_psmodule:
+    name: DockerMsftProviderInsider
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Install Docker package
+  win_shell: Install-Package –ProviderName "DockerMsftProviderInsider" -Name "Docker" -Force
+  args:
+    creates: "C:\\Program Files\\Docker\\metadata.json"
+  register: docker_install
+  when: docker_package_state == 'present'
 ...
