@@ -9,7 +9,6 @@
   package:
     name: "{{ docker_package }}"
     state: "{{ docker_package_state }}"
-  notify: restart docker
 
 - name: Ensure docker is started and enabled at boot.
   service:
@@ -17,11 +16,12 @@
     state: "{{ docker_service_state }}"
     enabled: "{{ docker_service_enabled }}"
 
-- name: Force handlers to execute before moving on, to avoid dependency conflicts.
-  meta: flush_handlers
+- include_tasks: docker-users.yml
+  when: docker_users
+
+- name: restart node to get the effect of docker install and user adding to docker group.
+  reboot:
 
 - include_tasks: docker-compose.yml
   when: docker_install_compose
-
-- include_tasks: docker-users.yml
-  when: docker_users
+...
