@@ -24,10 +24,20 @@ all:
           ansible_connection: winrm
           # When using self-signed cert should ignore the certificate validation because it’s not going to be from a valid CA.
           ansible_winrm_server_cert_validation: ignore
+        win-server-3:
+          ansible_host: 192.168.1.13
+          # By default 5986 is HTTPS where 5985 is HTTP. powershell "winrm enumerate winrm/config/Listener" will give the details.
+          ansible_port: 5986   
+          ansible_user: Administrator
+          ansible_password: enactor@123
+          ansible_connection: winrm
+          # When using self-signed cert should ignore the certificate validation because it’s not going to be from a valid CA.
+          ansible_winrm_server_cert_validation: ignore
+
 
     db_worker_nodes:
       hosts:
-        win-server-3:
+        win-server-4:
           ansible_host: 192.168.1.35
           # By default 5986 is HTTPS where 5985 is HTTP. powershell "winrm enumerate winrm/config/Listener" will give the details.
           ansible_port: 5986   

@@ -4,7 +4,7 @@ all:
     manager_nodes:
       hosts:
         ubu-server-1:
-          ansible_host: 192.168.1.47
+          ansible_host: 192.168.1.12
           ansible_port: 22
           ansible_user: enactor
           ansible_ssh_private_key_file: "/home/thilinamad/.ssh/id_rsa"
@@ -15,7 +15,7 @@ all:
     worker_nodes:
       hosts:
         ubu-server-2:
-          ansible_host: 192.168.1.48
+          ansible_host: 192.168.1.10
           ansible_port: 22
           ansible_user: enactor
           ansible_ssh_private_key_file: "/home/thilinamad/.ssh/id_rsa"
@@ -23,7 +23,7 @@ all:
           ansible_become_pass: enactor  # TODO Instead of keepin plain-text use a vault here.
           ansible_python_interpreter: "/usr/bin/python3"
         ubu-server-3:
-          ansible_host: 192.168.1.6
+          ansible_host: 192.168.1.11
           ansible_port: 22
           ansible_user: enactor
           ansible_ssh_private_key_file: "/home/thilinamad/.ssh/id_rsa"
@@ -34,7 +34,7 @@ all:
     db_worker_nodes:
       hosts:
         ubu-server-4:
-          ansible_host: 192.168.1.6
+          ansible_host: 192.168.1.14
           ansible_port: 22
           ansible_user: enactor
           ansible_ssh_private_key_file: "/home/thilinamad/.ssh/id_rsa"
