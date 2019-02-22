@@ -15,13 +15,19 @@
     name: docker
     state: "{{ docker_service_state }}"
     enabled: "{{ docker_service_enabled }}"
+  register: docker_enable
 
 - include_tasks: docker-users.yml
   when: docker_users
 
-- name: restart node to get the effect of docker install and user adding to docker group.
+
+- name: Restart node to get the effect of docker install and user adding to docker group.
   reboot:
+  when: docker_enable['changed'] or docker_user_add['changed']
 
 - include_tasks: docker-compose.yml
   when: docker_install_compose
+
+- include_tasks: python-modules.yml
+  when: install_python_modules
 ...

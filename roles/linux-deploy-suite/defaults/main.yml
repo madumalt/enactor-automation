@@ -1,0 +1,19 @@
+---
+deploy_suite_zip_location:  "/home/thilinamad/ENACTOR-CLOUD/SelfServiceManagementApp/DemoStandardDocker/swarm/lin/validation/target/lin-validation-swarm-TRUNK-SNAPSHOT-bundle.zip"
+deploy_suite_destination: "/home/{{ ansible_user }}/enactor-suite"
+
+docker_secrets:
+  - key: "keystore-password"
+    value: "Enactor@123#"
+  - key: "my-sql-username"
+    value: "enactorcloud"
+  - key: "my-sql-password"
+    value: "Enactor@123#"
+
+docker_registry: "enactordev-on.azurecr.io"
+docker_registry_username: "68dc05fb-9bf2-4856-aba4-3fa0d3508e46"
+docker_registry_password: "UGdB5GbbxMX23Kszkds7BXuNG7pUs7YIW/OXoJYgt9o="
+
+docker_stack_name: "enactordemo"
+docker_stack_remove_before_deploy: false
+...

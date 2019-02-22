@@ -5,9 +5,9 @@ docker_package_state: present
 
 # Service options.
 docker_service_state: started
-docker_service_enabled: True
+docker_service_enabled: true
 
 # Docker Compose options.
-docker_install_compose: True
+docker_install_compose: true
 docker_compose_version: "1.23.2"
 ...
