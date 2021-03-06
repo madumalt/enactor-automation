@@ -1,0 +1,7 @@
+# Task to distribute the fact containing address of the first Swarm manager.
+---
+- name: Distribute the fact containing address of the first Swarm manager.
+  set_fact:
+    swarm_manager_address: "{{hostvars[groups['manager_nodes'][0]]['swarm_manager_address'] }}"
+  when: "inventory_hostname != groups['manager_nodes'][0]"
+...

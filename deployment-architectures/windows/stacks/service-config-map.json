@@ -1,0 +1,171 @@
+{
+    "boi-stack.yml": {
+        "deployment_priority": 405, 
+        "service_name": "bo-integration", 
+        "env_files": ["common.env", "boi.env"], 
+        "volumes": ["enactor-data-boi-home"],
+        "description": "Bright Office Integration"
+    },
+    "cma-stack.yml": {
+        "deployment_priority": 155,
+        "service_name": "cm-application", 
+        "env_files": ["common.env", "common-cm.env", "cma.env"], 
+        "volumes": ["enactor-data-cma-home"],
+        "description": "Customer Manager Application"
+    },
+    "cmp-stack.yml": {
+        "deployment_priority": 151, 
+        "wait_timeout": 300,
+        "service_name": "cm-processing", 
+        "env_files": ["common.env", "common-cm.env", "cmp.env"], 
+        "volumes": ["enactor-data-cmp-home"],
+        "description": "Customer Manager Processing"
+    },
+    "cms-stack.yml": {
+        "deployment_priority": 152, 
+        "wait_timeout": 300,
+        "service_name": "cm-services", 
+        "env_files": ["common.env", "common-cm.env", "cms.env"], 
+        "volumes": ["enactor-data-cms-home"],
+        "description": "Customer Manager Service"
+    },
+    "ema-stack.yml": {
+        "deployment_priority": 105,
+        "service_name": "em-application", 
+        "env_files": ["common.env", "common-em.env", "ema.env"], 
+        "volumes": ["enactor-data-ema-home"],
+        "description": "Estate Manager Application"
+    },
+    "emc-stack.yml": {
+        "deployment_priority": 106,
+        "service_name": "em-cardauth",
+        "env_files": ["common.env", "common-em.env", "emc.env"], 
+        "volumes": ["enactor-data-emc-home"],
+        "description": "Estate Manager Card Auth"
+    },
+    "emp-stack.yml": {
+        "deployment_priority": 101, 
+        "wait_timeout": 300,
+        "service_name": "em-processing", 
+        "env_files": ["common.env", "common-em.env", "emp.env"], 
+        "volumes": ["enactor-data-emp-home", "enactor-data-solr-product_search_solrj"],
+        "description": "Estate Manager Processing"
+    },
+    "emr-stack.yml": {
+        "deployment_priority": 107, 
+        "service_name": "em-reports", 
+        "env_files": ["common.env", "common-em.env", "emr.env"], 
+        "volumes": ["enactor-data-emr-home"],
+        "description": "Estate Manager Report"
+    },
+    "ems-stack.yml": {
+        "deployment_priority": 102,
+        "wait_timeout": 300,
+        "service_name": "em-services", 
+        "env_files": ["common.env", "common-em.env", "ems.env"], 
+        "volumes": ["enactor-data-ems-home"],
+        "description": "Estate Manager Service"
+    },
+    "is-stack.yml": {
+        "deployment_priority": 300,
+        "service_name": "identity-server", 
+        "env_files": ["sso.env"], 
+        "volumes": ["enactor-data-is-home"],
+        "description": "Identity Server"
+    },
+    "ppa-stack.yml": {
+        "deployment_priority": 404, 
+        "service_name": "pp-application", 
+        "env_files": ["common.env", "common-pp.env", "ppa.env"], 
+        "volumes": ["enactor-data-ppa-home"],
+        "description": "Payment Portal Application"
+    },
+    "pps-stack.yml": {
+        "deployment_priority": 402,
+        "wait_timeout": 300,
+        "service_name": "pp-services", 
+        "env_files": ["common.env", "common-pp.env", "pps.env"], 
+        "volumes": ["enactor-data-pps-home"],
+        "description": "Payment Portal Service"
+    },
+    "ppgws-stack.yml": {
+        "deployment_priority": 403,
+        "service_name": "ppgw-services", 
+        "env_files": ["common.env", "common-pp.env", "ppgws.env"], 
+        "volumes": ["enactor-data-ppgws-home"],
+        "description": "Payment Portal Gateway Web Service"
+    },
+    "ppwsp-stack.yml": {
+        "deployment_priority": 401, 
+        "wait_timeout": 300, 
+        "service_name": "ppws-processing", 
+        "env_files": ["common.env", "common-pp.env", "ppwsp.env"], 
+        "volumes": ["enactor-data-ppwsp-home"],
+        "description": "Payment Portal Gateway Web Service Processing"
+    },
+    "oma-stack.yml": {
+        "deployment_priority": 202,
+        "service_name": "om-application", 
+        "env_files": ["common.env", "common-om.env", "oma.env"], 
+        "volumes": ["enactor-data-oma-home"],
+        "description": "Order Manager Application"
+    },
+    "omp-stack.yml": {
+        "deployment_priority": 200,
+        "service_name": "om-processing", 
+        "env_files": ["common.env", "common-om.env", "omp.env"], 
+        "volumes": ["enactor-data-omp-home"],
+        "description": "Order Manager Processing"
+    },
+    "oms-stack.yml": {
+        "deployment_priority": 201,
+        "service_name": "om-services", 
+        "env_files": ["common.env", "common-om.env", "oms.env"], 
+        "volumes": ["enactor-data-oms-home"],
+        "description": "Order Manager Service"
+    },
+    "pdp-stack.yml": {
+        "deployment_priority": 103,
+        "wait_timeout": 300,
+        "service_name": "pdp-server-1", 
+        "env_files": ["common.env", "common-pdp.env", "pdp1.env"], 
+        "volumes": ["enactor-data-pdp1-home"],
+        "description": "PDP Server"
+    },
+    "ppm-stack.yml": {
+        "deployment_priority": 302,
+        "service_name": "ppm-server", 
+        "env_files": ["ppm.env"], 
+        "volumes": [],
+        "description": "Payment Portal Mock"
+    },
+    "solr-stack.yml": {
+        "deployment_priority": 80,
+        "service_name": "solr", 
+        "env_files": ["solr.env"], 
+        "volumes": ["enactor-data-emp-home", "enactor-data-solr-product_search_solrj"],
+        "description": "SOLR Service"
+    },
+    "ss-stack.yml": {
+        "deployment_priority": 104,
+        "wait_timeout": 300, 
+        "service_name": "store-server-1", 
+        "env_files": ["common.env", "common-ss.env", "ss1.env"], 
+        "volumes": ["enactor-data-ss1-home"],
+        "description": "Store Server"
+    },
+    "ws-stack.yml": {
+        "deployment_priority": 301, 
+        "service_name": "web-shop", 
+        "env_files": ["common.env", "common-em.env", "ws.env"], 
+        "volumes": ["enactor-data-ws-home"],
+        "description": "Web Shop"
+    },
+    "wsl-stack.yml": {
+        "deployment_priority": 303,
+        "service_name": "web-shop-legacy", 
+        "env_files": ["common.env", "common-em.env", "wsl.env"], 
+        "volumes": ["enactor-data-wsl-home"],
+        "description": "Web Shop Legacy"
+    }
+}

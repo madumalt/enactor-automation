@@ -1,0 +1,19 @@
+# Contains tasks to install required python and supportive python modules. 
+---
+- name: Install python pip.
+  package:
+    name: python-pip
+    state: present
+  when: ansible_python_version is version('3', '<')
+
+- name: Install python pip.
+  package:
+    name: python3-pip
+    state: present
+  when: ansible_python_version is version('3', '>=')
+
+- name: Install python docker to support using docker ansible modules.
+  pip:
+    name: "{{ python_modules }}"
+    state: present
+...

@@ -1,0 +1,38 @@
+{
+    "all": {
+        "children": {
+            "manager_nodes": {
+                "hosts": {
+                    "<UNIQUE_HOST_NAME>": {
+                        "ansible_become_user": "<MACHINE_ADMIN_USER>",
+                        "ansible_connection": "winrm",
+                        "ansible_winrm_server_cert_validation": "ignore",
+                        "ansible_host": "<MACHINE_PUBLIC_IP>",
+                        "ansible_password": "<MACHINE_WINRM_PASSWORD>",
+                        "ansible_port": "5986",
+                        "ansible_user": "<MACHINE_WINRM_USERNAME>",
+                        "docker_node_labels": "all=true",
+                        "private_ip": "<MACHINE_PRIVATE_IP>",
+                        "allow_service_deployment": false
+                    }
+                }
+            },
+            "worker_nodes": {
+                "hosts": {
+                    "<UNIQUE_HOST_NAME>": {
+                        "ansible_become_user": "<MACHINE_ADMIN_USER>",
+                        "ansible_connection": "winrm",
+                        "ansible_winrm_server_cert_validation": "ignore",
+                        "ansible_host": "<MACHINE_PUBLIC_IP>",
+                        "ansible_password": "<MACHINE_WINRM_PASSWORD>",
+                        "ansible_port": "5986",
+                        "ansible_user": "<MACHINE_WINRM_USERNAME>",
+                        "docker_node_labels": "all=true",
+                        "private_ip": "<MACHINE_PRIVATE_IP>",
+                        "allow_service_deployment": true
+                    }
+                }
+            }
+        }
+    }
+}

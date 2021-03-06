@@ -1,0 +1,30 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+
+- name: Ensure subversion is present
+  package: 
+    name: subversion 
+    state: present
+
+- name: Export subversion directory to folder
+  subversion:
+    repo: https://dev.enactor.co.uk/svn/dev/Products/Tools/trunk/EnactorDeploymentTool/cloud_controller/
+    dest: /home/ubuntu/cloud_controller
+    username: "{{ svn_username }}"
+    password: "{{ svn_password }}"
+
+- name: Copy jenkins.env.example to jenkins.env
+  shell: cp jenkins.env.example jenkins.env
+  args:
+    chdir: cloud_controller
+
+- name: Run cloud controller
+  shell: docker-compose down -v && docker-compose up --build -d
+  args:
+    chdir: cloud_controller
+  register: docker_compose
+
+- debug: var=docker_compose.stdout_lines
+...

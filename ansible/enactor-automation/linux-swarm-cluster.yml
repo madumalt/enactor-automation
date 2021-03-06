@@ -1,0 +1,16 @@
+---
+- name: Playbook to setup swarm for linux based systems.
+  hosts:
+    - manager_nodes
+    - worker_nodes
+
+  roles:
+    - linux-swarm-cluster
+
+  environment:
+    http_proxy: "{{ proxy_setting | default('') }}"
+    https_proxy: "{{ proxy_setting | default('') }}"
+    ftp_proxy: "{{ proxy_setting | default('') }}"
+    no_proxy: "{{ no_proxy | default('') }}"
+    REQUESTS_CA_BUNDLE: "{{ requests_ca_bundle | default('') }}"
+...

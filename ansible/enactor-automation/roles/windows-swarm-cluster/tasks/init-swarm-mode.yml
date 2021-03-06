@@ -1,0 +1,20 @@
+# Task to initiate the swarm on the leader in the manager group.
+---
+- name: Init "Swarm Mode" on the first manager.
+  win_shell: docker swarm init
+        --listen-addr "{{ private_ip }}:{{ docker_swarm_port }}"
+        --advertise-addr "{{ private_ip }}:{{ docker_swarm_port }}"
+        --availability {{ (drain_host | bool) | ternary('drain', 'active')}}
+  when: 
+    - "docker_info.stdout.find('Swarm: active') == -1"
+    - "'manager_nodes' in group_names"
+    - "inventory_hostname == groups['manager_nodes'][0]"
+  async: 300
+  poll: 10
+  register: init_swarm
+
+- name: Pause for a while if swarm init happen.
+  pause:
+    seconds: 30
+  when: "init_swarm.changed"
+...

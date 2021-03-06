@@ -1,0 +1,8 @@
+---
+- name: Playbook to create network drives for windows based systems.
+  hosts:
+    - storage_nodes
+
+  roles:
+    - windows-create-network-drives
+...

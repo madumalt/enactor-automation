@@ -1,0 +1,93 @@
+{
+  "environment-params": {
+    "os": "linux",
+    "provider": "aws"
+  },
+  "infrastructure-params": {
+    "INFRASTRUCTURE": {
+      "resource_identifier": "self-service",
+      "vpc": {
+        "vpc_identifier": "vpc",
+        "address_range": "10.0.0.0/24"
+      },
+      "subnets": [
+        {
+          "type": "public",
+          "subnet_identifier": "subnet-main",
+          "address_range": "10.0.0.0/24"
+        }
+      ],
+      "machines": [
+        {
+          "host_os": "linux",
+          "host_category": "tester",
+          "subnet_identifier": "subnet-main",
+          "host_label": "tester",
+          "host_size": "t2.medium",
+          "disk_size": "30",
+          "password": "En@ctorPer4manceTesting"
+        },
+        {
+          "host_os": "linux",
+          "host_category": "manager",
+          "subnet_identifier": "subnet-main",
+          "host_label": "manager",
+          "host_size": "t2.xlarge",
+          "disk_size": "80",
+          "password": "En@ctorPer4manceTesting"
+        }
+      ]
+    },
+    "CLOUD_PROVIDER_CREDENTIAL_ID": "aws_devops_development",
+    "REGION": "us-east-1"
+  },
+  "enactor-suite-params": {
+    "service-list": [
+      "ema-stack.yml",
+      "emr-stack.yml",
+      "emp-stack.yml",
+      "mysql-em-stack.yml",
+      "ems-stack.yml",
+      "emc-stack.yml"
+    ],
+    "service-feature-map": {
+      "ema-stack.yml": {
+        "PORT_PUBLISHING_MODE": "ingress",
+        "REPLICAS": 1,
+        "CONSTRAINTS": []
+      },
+      "emr-stack.yml": {
+        "PORT_PUBLISHING_MODE": "ingress",
+        "REPLICAS": 1,
+        "CONSTRAINTS": []
+      },
+      "emp-stack.yml": {
+        "PORT_PUBLISHING_MODE": "ingress",
+        "REPLICAS": 1,
+        "CONSTRAINTS": []
+      },
+      "mysql-em-stack.yml": {
+        "PORT_PUBLISHING_MODE": "ingress",
+        "REPLICAS": 1,
+        "CONSTRAINTS": []
+      },
+      "ems-stack.yml": {
+        "PORT_PUBLISHING_MODE": "ingress",
+        "REPLICAS": 1,
+        "CONSTRAINTS": []
+      },
+      "emc-stack.yml": {
+        "PORT_PUBLISHING_MODE": "ingress",
+        "REPLICAS": 1,
+        "CONSTRAINTS": []
+      }
+    },
+    "DOCKER_REGISTRY_CREDENTIALS": "<registry_credentials_id>",
+    "STANDARD_DOCKER_VERSION": "2.4.180.131",
+    "ENABLE_SERVICE_SELECTION": true,
+    "STANDARD_MYSQL_VERSION": "latest",
+    "ENABLE_SERVICE_CUSTOMIZATION": false,
+    "ENABLE_ENV_OVERRIDE": false,
+    "PUBLIC_IP_ADDRESS": "172.17.0.1"
+  }
+}

@@ -1,0 +1,6 @@
+# Create NFS docker volumes to be mounted to the depolying swarm services.
+---
+- name: Create required local docker volumes.
+  shell: "docker volume create {{ item }}"
+  with_items: "{{ volume_list }}"
+...

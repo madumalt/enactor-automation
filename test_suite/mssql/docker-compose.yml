@@ -1,0 +1,18 @@
+version: '3.4'
+services:
+
+  # ===================== MSSQL ===============================
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: testsuitemssql
+    environment:
+      - 'ACCEPT_EULA=Y'
+      - 'SA_PASSWORD=Enactor123'
+    volumes:
+      - test-suite-mssql:/var/opt/mssql
+    ports:
+      - "2433:1433"
+
+volumes:
+  test-suite-mssql:
+    driver: local

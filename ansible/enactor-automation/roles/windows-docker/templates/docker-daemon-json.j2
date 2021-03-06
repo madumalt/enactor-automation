@@ -1,0 +1,4 @@
+{
+    "labels": ["private_ip={{ private_ip }}"],
+    "data-root": "{{ (docker_data_root is defined) | ternary(docker_data_root, '') }}"
+}

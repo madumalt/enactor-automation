@@ -1,0 +1,7 @@
+---
+- name: Playbook to check if a container is running
+  hosts: '{{host_group}}'
+
+  roles:
+    - linux-check-container-running
+...

@@ -1,0 +1,69 @@
+---
+version: '3.7'
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+volumes:
+  enactor-payment-proxy-home:
+    external: true
+    name: enactor-payment-proxy-home
+
+services:
+  payment-proxy:
+    image: enactordev-on.azurecr.io/enactorbase/lin/payment-proxy:REPLACE_DOCKER_TAG
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3   
+    env_file:
+      - ./envs/payment-proxy.env
+    ports:
+      - target: 80
+        published: 80
+        mode: ingress
+      - target: 443
+        published: 443
+        mode: ingress
+    networks:
+      - enactor-stack-overlay
+    volumes:
+      - enactor-payment-proxy-home:/enactor/app/home 
+    secrets:
+      - source: payment-proxy-crt
+        target: /data/certificates/payment-proxy.crt
+        mode: 0644
+      - source: payment-proxy-key
+        target: /data/certificates/payment-proxy.key
+        mode: 0644
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+
+secrets:
+  payment-proxy-crt:
+    file: ./resources/certificates/payment-proxy.crt
+  payment-proxy-key:
+    file: ./resources/certificates/payment-proxy.key
+...

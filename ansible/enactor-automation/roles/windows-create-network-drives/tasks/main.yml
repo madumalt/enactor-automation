@@ -1,0 +1,38 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+# Create file-shares and setup the storage nodes.
+- include_tasks: create-file-share.yml
+  when: "inventory_hostname in groups['storage_nodes']"
+
+# Set nfs_server_ip as a fact.
+- name: Set the nfs_server_ip
+  set_fact:
+    nfs_server_ip: "{{ private_ip }}"
+  when: 
+    - groups['storage_nodes'] | length | bool
+    - "inventory_hostname == groups['storage_nodes'][0]"
+    - obtain_nfs_server_ip_from_inventory | bool
+
+# Distribute the nfs_server_ip fac to other nodes.
+- name: Distribute the nfs_server_ip fact to other nodes as well
+  set_fact:
+    nfs_server_ip: "{{ hostvars[groups['storage_nodes'][0]]['nfs_server_ip'] }}"
+  when: 
+    - groups['storage_nodes'] | length | bool
+    - "inventory_hostname != groups['storage_nodes'][0]"
+    - obtain_nfs_server_ip_from_inventory | bool
+
+# Create network drive creation scripts if IS_NFS is ticked and place them in the controller node.
+- name: Create shell script to mount drive z.
+  win_template:
+    src: mount.j2
+    dest: "{{ mount_script_location }}/{{ item }}"
+  delegate_to: localhost
+  delegate_facts: false
+  when: 
+    - groups['storage_nodes'] | length | bool
+    - "inventory_hostname == groups['storage_nodes'][0]"
+  with_items: "{{ volume_list }}"
+...

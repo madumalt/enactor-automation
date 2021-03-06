@@ -1,0 +1,11 @@
+---
+- name: Playbook to setup swarm for windows based systems.
+  hosts:
+    - manager_nodes
+    - worker_nodes
+  become_method: runas
+  become: true
+
+  roles:
+    - windows-swarm-cluster
+...

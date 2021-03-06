@@ -1,0 +1,7 @@
+---
+host_group: 'manager_nodes'
+
+command_directory: 'docker-compose'
+remote_command: ''
+show_output: no
+...

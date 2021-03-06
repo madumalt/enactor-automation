@@ -1,0 +1,25 @@
+---
+- name: Playbook to setup docker for linux based systems.
+  hosts:
+    - manager_nodes
+    - worker_nodes
+    - tester_nodes
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      when: 
+        - node_config_mode == 'normal'
+        - ansible_os_family == 'Debian'
+
+  roles:
+    - linux-docker
+
+  environment:
+    http_proxy: "{{ proxy_setting | default('') }}"
+    https_proxy: "{{ proxy_setting | default('') }}"
+    ftp_proxy: "{{ proxy_setting | default('') }}"
+    no_proxy: "{{ no_proxy | default('') }}"
+    REQUESTS_CA_BUNDLE: "{{ requests_ca_bundle | default('') }}"
+...

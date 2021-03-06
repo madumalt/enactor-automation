@@ -1,0 +1,21 @@
+# Task to join workers to the swarm.
+---
+- name: Join the pending Swarm worker nodes.
+  win_shell: docker swarm join
+        --listen-addr {{ private_ip }}:{{ docker_swarm_port }}
+        --advertise-addr {{ private_ip }}:{{ docker_swarm_port }}
+        --availability {{ (drain_host | bool) | ternary('drain', 'active')}}
+        --token {{ swarm_worker_token.stdout_lines[0] }}
+        {{ swarm_manager_address }}
+  changed_when: false
+  when: 
+    - "docker_info.stdout.find('Swarm: active') == -1"
+    - "docker_info.stdout.find('Swarm: pending') == -1"
+    - "'worker_nodes' in group_names or 'db_worker_nodes' in group_names"
+  register: join_worker
+  
+- name: Pause for a while if swarm join worker happen.
+  pause:
+    seconds: 30
+  when: "join_worker.changed"
+...

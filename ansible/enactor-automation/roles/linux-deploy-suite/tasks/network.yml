@@ -1,0 +1,27 @@
+# Contains tasks to create docker network.
+---
+- name: List already existing docker networks.
+  shell: docker network ls 
+  register: docker_network_list
+
+- name: Reomve nat-network that we intend to create if exists.
+  shell: docker network rm {{ docker_network_name }}
+  when:
+    - "re_init_docker_network_if_exist"
+    - "docker_network_name in docker_network_list.stdout"
+
+- name: List already existing docker networks.
+  shell: docker network ls 
+  register: docker_network_list
+
+- name: Create required docker network.
+  shell: docker network create 
+          --subnet {{ docker_network_sub_net }}
+          --gateway {{ docker_network_gateway }}
+          --driver {{ docker_network_driver }}
+          --scope swarm
+          --label "com.docker.stack.namespace={{ docker_stack_name }}"
+          {{ docker_network_name }}
+  when:
+    - "docker_network_list.stdout.find(docker_network_name) == -1"
+...

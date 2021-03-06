@@ -1,0 +1,4 @@
+# Variable values for Fedora distributions.
+---
+nfs_server_daemon: nfs-server
+...

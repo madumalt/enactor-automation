@@ -1,0 +1,16 @@
+---
+- name: Recursively find performance log files
+  find:
+    paths: '{{source_directory}}'
+    file_type: file
+    recurse: yes
+  become: true
+  register: log_files
+
+- name: Fetch folder from remote host
+  fetch:
+    src: '{{item.path}}'
+    dest: '{{destination_directory}}'
+  become: true
+  with_items: '{{log_files.files}}'
+...

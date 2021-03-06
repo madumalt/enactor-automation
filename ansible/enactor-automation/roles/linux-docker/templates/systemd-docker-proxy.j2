@@ -1,0 +1,4 @@
+[Service]
+Environment="HTTP_PROXY={{ proxy_setting | default('') }}"
+Environment="HTTPS_PROXY={{ proxy_setting | default('') }}"
+Environment="NO_PROXY={{ no_proxy | default('localhost') }}"

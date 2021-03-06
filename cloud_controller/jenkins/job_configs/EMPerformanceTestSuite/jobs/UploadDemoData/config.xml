@@ -1,0 +1,109 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.31">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.3.5"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.3.5">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description>Uploads Demo Data to EM</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+
+        <!-- ================== EM Details ========================== -->
+        <!-- EMP -->
+        <hudson.model.StringParameterDefinition>
+          <name>EMP_HOST</name>
+          <description>The IP address or hostname of the EM Processing Server</description>
+          <defaultValue/>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>EMP_PORT</name>
+          <description>The listening port of the EM Processing Server</description>
+          <defaultValue>39832</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <!-- EMS -->
+        <hudson.model.StringParameterDefinition>
+          <name>EMS_HOST</name>
+          <description>The IP address or hostname of the EM Services Server</description>
+          <defaultValue/>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>EMS_PORT</name>
+          <description>The listening port of the EM Services Server</description>
+          <defaultValue>39833</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+
+        <!-- ========================== Run with Retries ============================= -->
+        <hudson.model.BooleanParameterDefinition>
+          <name>WITH_RETRIES</name>
+          <description>Select if the file uploads should be retried (max 3 times) on failure</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+
+        <!-- ======================== Demo Data Zip file URL ====================== -->
+        <hudson.model.StringParameterDefinition>
+          <name>FILE_URL</name>
+          <description>The URL for the zip/xml file of data to be uploaded</description>
+          <!-- TODO Remove this default value -->
+          <defaultValue>https://dev.enactor.co.uk/releases/Demo/2.3.377/data/demo-data-estateManager-2.3.377.zip</defaultValue>
+          <trim>true</trim>
+        </hudson.model.StringParameterDefinition>
+
+        <!--========================== Licence file =============================-->
+        <hudson.model.TextParameterDefinition>
+          <name>FILE_CONTENT</name>
+          <description>The content of the xml file which requires to be uploaded to EM</description>
+          <defaultValue/>
+          <trim>true</trim>
+        </hudson.model.TextParameterDefinition>
+
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>5</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.63">
+    <scm class="hudson.scm.SubversionSCM" plugin="subversion@2.12.1">
+      <locations>
+        <hudson.scm.SubversionSCM_-ModuleLocation>
+          <remote>${SELF_SERVICE_SVN_LOCATION_TRUNK}/cloud_controller/jenkins/pipeline_scripts</remote>
+          <credentialsId>72771537-75b6-4838-a194-752f342c71ae</credentialsId>
+          <local>.</local>
+          <depthOption>infinity</depthOption>
+          <ignoreExternalsOption>true</ignoreExternalsOption>
+          <cancelProcessOnExternalsFail>true</cancelProcessOnExternalsFail>
+        </hudson.scm.SubversionSCM_-ModuleLocation>
+      </locations>
+      <excludedRegions></excludedRegions>
+      <includedRegions></includedRegions>
+      <excludedUsers></excludedUsers>
+      <excludedRevprop></excludedRevprop>
+      <excludedCommitMessages></excludedCommitMessages>
+      <workspaceUpdater class="hudson.scm.subversion.UpdateUpdater"/>
+      <ignoreDirPropChanges>false</ignoreDirPropChanges>
+      <filterChangelog>false</filterChangelog>
+      <quietOperation>true</quietOperation>
+    </scm>
+    <scriptPath>upload_demo_data.groovy</scriptPath>
+    <lightweight>false</lightweight>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

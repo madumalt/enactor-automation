@@ -1,0 +1,51 @@
+# Contains the tasks that require to install nfs-server and export required folders.
+---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Include overrides specific to RHEL 7.
+  include_vars: RedHat-7.yml
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version == "7"
+
+- name: Include overrides specific to Fedora.
+  include_vars: Fedora.yml
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution == "Fedora"
+
+# Setup/install tasks.
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure directories to export exist
+  file:
+    path: "{{ nfs_base_dir }}/{{ item }}"
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: 0755
+    recurse: yes
+  with_items: "{{ volume_list }}"
+
+- name: Copy exports file.
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nfs
+
+- name: Ensure nfs is running.
+  service: 
+    name: "{{ nfs_server_daemon }}"
+    state: started
+    enabled: true
+  when: volume_list | length | bool
+...

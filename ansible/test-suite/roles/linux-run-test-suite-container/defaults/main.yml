@@ -1,0 +1,48 @@
+---
+host_group: 'tester_nodes'
+
+docker_registry: "<registry_name>"
+docker_registry_username: "<registry_username>"
+docker_registry_password: "<registry_password>"
+
+container_name: 'test-suite'
+docker_image: 'enactorsandbox.azurecr.io/emperformancetestsuite/test-suite:release-0.6'
+
+volumes:
+  - testsuite:/enactor/app/home
+
+simulation_name: 'Enactor_PerformanceTesting_Unknown'
+duration: '30'
+no_of_devices: '20'
+no_of_threads: '20'
+transaction_type: 'SALE'
+max_queue_length: '10'
+inter_arrival_time: '5'
+service_time: '5'
+service_time_std: '3'
+max_sale_items: '10'
+completion_check_interval: '60'
+target_provider: 'aws'
+target_customer: 'Enactor'
+target_environment: 'PerformanceTesting'
+target_release_version: 'Unknown'
+em_host: '3.95.161.69'
+em_port: '39832'
+server_queue: 'ServerTransactions'
+elasticsearch_host: '35.178.92.18'
+elasticsearch_port: '9200'
+elasticsearch_scheme: 'http'
+kibana_base: 'http://imesha-playground.southeastasia.cloudapp.azure.com:5601/'
+jdbc_driver: 'com.mysql.jdbc.Driver'
+jdbc_url: 'jdbc:mysql://3.95.161.69:3326/enactorem'
+jdbc_user: 'root'
+jdbc_password: 'enactor'
+operation: 'help'
+
+mysql_username: 'root'
+mysql_password: 'enactor'
+mysql_host: 'mysql'
+mysql_port: '3226'
+elasticsearch_hosts: '{{elasticsearch_host}}:{{elasticsearch_port}}'
+kibana_host: 'imesha-playground.southeastasia.cloudapp.azure.com:5601'
+...

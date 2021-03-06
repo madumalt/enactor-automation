@@ -1,0 +1,36 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+# Setup the nfs server.
+- include_tasks: nfs-setup.yml
+  when: "inventory_hostname in groups['storage_nodes']"
+
+# Set nfs_server_ip as a fact.
+- name: Set the nfs_server_ip
+  set_fact:
+    nfs_server_ip: "{{ private_ip }}"
+  when: 
+    - groups['storage_nodes'] | length | bool
+    - "inventory_hostname == groups['storage_nodes'][0]"
+    - obtain_nfs_server_ip_from_inventory | bool
+
+# Distribute the nfs_server_ip fac to other nodes.
+- name: Distribute the nfs_server_ip fact to other nodes as well
+  set_fact:
+    nfs_server_ip: "{{ hostvars[groups['storage_nodes'][0]]['nfs_server_ip'] }}"
+  when: 
+    - groups['storage_nodes'] | length | bool
+    - "inventory_hostname != groups['storage_nodes'][0]"
+    - obtain_nfs_server_ip_from_inventory | bool
+
+- include_tasks: create-nfs-volumes.yml
+  when: 
+    - inventory_hostname not in groups['storage_nodes']
+    - is_nfs | bool
+
+- include_tasks: create-local-volumes.yml
+  when: 
+    - inventory_hostname not in groups['storage_nodes']
+    - not (is_nfs | bool)
+...

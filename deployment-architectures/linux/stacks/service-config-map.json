@@ -1,0 +1,278 @@
+{
+    "boi-stack.yml": {
+        "deployment_priority": 405,
+        "service_name": "bo-integration", 
+        "env_files": ["common.env", "boi.env"], 
+        "volumes": ["enactor-data-boi-home"],
+        "description": "Bright Office Integration"
+    },
+    "cma-stack.yml": {
+        "deployment_priority": 155, 
+        "wait_end_point": "39838/WebCustomerManagement", 
+        "service_name": "cm-application", 
+        "env_files": ["common.env", "common-cm.env", "cma.env"], 
+        "volumes": ["enactor-data-cma-home"],
+        "description": "Customer Manager Application"
+    },
+    "cmp-stack.yml": {
+        "deployment_priority": 151, 
+        "wait_end_point": "39840/WebCore",
+        "service_name": "cm-processing", 
+        "env_files": ["common.env", "common-cm.env", "cmp.env"], 
+        "volumes": ["enactor-data-cmp-home"],
+        "description": "Customer Manager Processing"
+    },
+    "cms-stack.yml": {
+        "deployment_priority": 152, 
+        "wait_end_point": "39841/axis2", 
+        "service_name": "cm-services", 
+        "env_files": ["common.env", "common-cm.env", "cms.env"], 
+        "volumes": ["enactor-data-cms-home"],
+        "description": "Customer Manager Service"
+    },
+    "ema-stack.yml": {
+        "deployment_priority": 105,
+        "wait_end_point": "39830/WebMaintenance",
+        "service_name": "em-application",
+        "env_files": ["common.env", "common-em.env", "ema.env"], 
+        "volumes": ["enactor-data-ema-home"],
+        "description": "Estate Manager Application"
+    },
+    "emc-stack.yml": {
+        "deployment_priority": 106, 
+        "service_name": "em-cardauth", 
+        "env_files": ["common.env", "common-em.env", "emc.env"], 
+        "volumes": ["enactor-data-emc-home"],
+        "description": "Estate Manager Card Auth"
+    },
+    "emp-stack.yml": {
+        "deployment_priority": 101, 
+        "wait_end_point": "39832/WebCore",
+        "service_name": "em-processing", 
+        "env_files": ["common.env", "common-em.env", "emp.env"], 
+        "volumes": ["enactor-data-emp-home", "enactor-data-solr-product_search_solrj"],
+        "description": "Estate Manager Processing"
+    },
+    "emr-stack.yml": {
+        "deployment_priority": 107, 
+        "service_name": "em-reports", 
+        "env_files": ["common.env", "common-em.env", "emr.env"], 
+        "volumes": ["enactor-data-emr-home"],
+        "description": "Estate Manager Report"
+    },
+    "ems-stack.yml": {
+        "deployment_priority": 102,
+        "wait_end_point": "39833/axis2",
+        "service_name": "em-services", 
+        "env_files": ["common.env", "common-em.env", "ems.env"], 
+        "volumes": ["enactor-data-ems-home"],
+        "description": "Estate Manager Service"
+    },
+    "is-stack.yml": {
+        "deployment_priority": 300, 
+        "service_name": "identity-server", 
+        "env_files": ["sso.env"], 
+        "volumes": ["enactor-data-is-home"],
+        "description": "Identity Server"
+    },
+    "payment-proxy-stack.yml": {
+        "deployment_priority": 500, 
+        "service_name": "payment-proxy", 
+        "env_files": ["payment-proxy.env"], 
+        "volumes": ["enactor-payment-proxy-home"],
+        "description": "Payment portal nginx reverse proxy server"
+    },
+    "ppa-stack.yml": {
+        "deployment_priority": 404, 
+        "wait_end_point": "39871/WebPaymentPortalMaintenance", 
+        "service_name": "pp-application", 
+        "env_files": ["common.env", "common-pp.env", "ppa.env"], 
+        "volumes": ["enactor-data-ppa-home"],
+        "description": "Payment Portal Application"
+    },
+    "pps-stack.yml": {
+        "deployment_priority": 402, 
+        "service_name": "pp-services", 
+        "env_files": ["common.env", "common-pp.env", "pps.env"], 
+        "volumes": ["enactor-data-pps-home"],
+        "description": "Payment Portal Service"
+    },
+    "ppgws-stack.yml": {
+        "deployment_priority": 403,
+        "service_name": "ppgw-services", 
+        "env_files": ["common.env", "common-pp.env", "ppgws.env"], 
+        "volumes": ["enactor-data-ppgws-home"],
+        "description": "Payment Portal Gateway Web Service"
+    },
+    "ppwsp-stack.yml": {
+        "deployment_priority": 401, 
+        "wait_end_point": "39873/WebCore", 
+        "service_name": "ppws-processing", 
+        "env_files": ["common.env", "common-pp.env", "ppwsp.env"], 
+        "volumes": ["enactor-data-ppwsp-home"],
+        "description": "Payment Portal Gateway Web Service Processing"
+    },
+    "mysql-cm-stack.yml": {
+        "deployment_priority": 5,
+        "service_name": "mysql-cm", 
+        "env_files": [], 
+        "volumes": [],
+        "description": "Docker MySQL Server for Customer Manager"
+    },
+    "mysql-em-stack.yml": {
+        "deployment_priority": 1,
+        "service_name": "mysql-em", 
+        "env_files": [], 
+        "volumes": [],
+        "description": "Docker MySQL Server for Estate Manager"
+    },
+    "mysql-is-stack.yml": {
+        "deployment_priority": 2,
+        "service_name": "mysql-is", 
+        "env_files": [], 
+        "volumes": [],
+        "description": "Docker MySQL Server for Identity Server"
+    },
+    "mysql-pdp-stack.yml": {
+        "deployment_priority": 3,
+        "service_name": "mysql-pdp1", 
+        "env_files": [], 
+        "volumes": [],
+        "description": "Docker MySQL Server for PDP server"
+    },
+    "mysql-pp-stack.yml": {
+        "deployment_priority": 6,
+        "service_name": "mysql-pp", 
+        "env_files": [], 
+        "volumes": [],
+        "description": "Docker MySQL Server for Payment Portal"
+    },
+    "mysql-ss-stack.yml": {
+        "deployment_priority": 4,
+        "service_name": "mysql-ss1", 
+        "env_files": [], 
+        "volumes": [],
+        "description": "Docker MySQL Server for Store server"
+    },
+    "oma-stack.yml": {
+        "deployment_priority": 202,
+        "service_name": "om-application", 
+        "env_files": ["common.env", "common-om.env", "oma.env"], 
+        "volumes": ["enactor-data-oma-home"],
+        "description": "Order Manager Application"
+    },
+    "omp-stack.yml": {
+        "deployment_priority": 200, 
+        "service_name": "om-processing", 
+        "env_files": ["common.env", "common-om.env", "omp.env"], 
+        "volumes": ["enactor-data-omp-home"],
+        "description": "Order Manager Processing"
+    },
+    "oms-stack.yml": {
+        "deployment_priority": 201,
+        "service_name": "om-services", 
+        "env_files": ["common.env", "common-om.env", "oms.env"], 
+        "volumes": ["enactor-data-oms-home"],
+        "description": "Order Manager Service"
+    },
+    "pdp-stack.yml": {
+        "deployment_priority": 103, 
+        "wait_timeout": 300,
+        "service_name": "pdp-server-1", 
+        "env_files": ["common.env", "common-pdp.env", "pdp1.env"], 
+        "volumes": ["enactor-data-pdp1-home"],
+        "description": "PDP Server"
+    },
+    "ppm-stack.yml": {
+        "deployment_priority": 302,
+        "service_name": "ppm-server", 
+        "env_files": ["ppm.env"], 
+        "volumes": [],
+        "description": "Payment Portal Mock"
+    },
+    "solr-stack.yml": {
+        "deployment_priority": 80,
+        "service_name": "solr", 
+        "env_files": ["solr.env"], 
+        "volumes": ["enactor-data-solr-product_search_solrj"],
+        "description": "SOLR Service"
+    },
+    "ss-stack.yml": {
+        "deployment_priority": 104, 
+        "wait_end_point": "39848/WebStoreManagement",
+        "service_name": "store-server-1", 
+        "env_files": ["common.env", "common-ss.env", "ss1.env"], 
+        "volumes": ["enactor-data-ss1-home"],
+        "description": "Store Server"
+    },
+    "ws-stack.yml": {
+        "deployment_priority": 301, 
+        "service_name": "web-shop", 
+        "env_files": ["common.env", "common-em.env", "ws.env"], 
+        "volumes": ["enactor-data-ws-home"],
+        "description": "Web Shop"
+    },
+    "wsl-stack.yml": {
+        "deployment_priority": 303, 
+        "service_name": "web-shop-legacy", 
+        "env_files": ["common.env", "common-em.env" , "wsl.env"], 
+        "volumes": [],
+        "description": "Web Shop Leagacy"
+    },
+    "file-beat-stack.yml": {
+        "deployment_priority": 801, 
+        "service_name": "file-beats", 
+        "env_files": ["monitoring/filebeat/filebeat.yml"], 
+        "volumes": [],
+        "description": "File-Beats Service"
+    },
+    "metric-beat-stack.yml": {
+        "deployment_priority": 802, 
+        "service_name": "metric-beats", 
+        "env_files": ["monitoring/metricbeat/metricbeat.yml"], 
+        "volumes": [],
+        "description": "Metric-Beats Service"
+    },
+    "es1-stack.yml": {
+        "deployment_priority": 701, 
+        "service_name": "es1", 
+        "env_files": ["monitoring/elasticsearch/es1.env"], 
+        "volumes": ["es1-data"],
+        "description": "Elasticsearch Service 1"
+    },
+    "es2-stack.yml": {
+        "deployment_priority": 702, 
+        "service_name": "es2", 
+        "env_files": ["monitoring/elasticsearch/es2.env"], 
+        "volumes": ["es2-data"],
+        "description": "Elasticsearch Service 2"
+    },
+    "es3-stack.yml": {
+        "deployment_priority": 703, 
+        "service_name": "es3", 
+        "env_files": ["monitoring/elasticsearch/es3.env"],  
+        "volumes": ["es3-data"],
+        "description": "Elasticsearch Service 3"
+    },
+    "logstash-stack.yml": {
+        "deployment_priority": 711, 
+        "service_name": "logstash", 
+        "env_files": ["monitoring/logstash/config/logstash.yml","monitoring/logstash/config/pipelines.yml","monitoring/logstash/pipeline/beats.conf","monitoring/logstash/pipeline/gelf.conf"], 
+        "volumes": ["logstash-data"],
+        "description": "Logstash Service"
+    },
+    "kibana-stack.yml": {
+        "deployment_priority": 721, 
+        "service_name": "kibana", 
+        "env_files": ["monitoring/kibana/kibana.yml"], 
+        "volumes": ["kibana-data"],
+        "description": "Kibana Service"
+    },
+    "wazuh-stack.yml": {
+        "deployment_priority": 712, 
+        "service_name": "wazuh", 
+        "env_files": ["monitoring/wazuh/config/ossec.conf","monitoring/wazuh/wazuh-filebeat.yml"], 
+        "volumes": [],
+        "description": "Wazuh Ossec Service"
+    }
+}

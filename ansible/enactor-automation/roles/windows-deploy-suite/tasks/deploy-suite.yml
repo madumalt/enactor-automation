@@ -1,0 +1,53 @@
+# Contains the tasks required to deploy enactor suite services.
+---
+- name: Log into docker registry and force re-authorization.
+  win_shell: "docker login --username {{ docker_registry_username }} --password {{ docker_registry_password }} {{ docker_registry }}"
+
+- name: Get the list of already deployed stacks.
+  win_shell: docker stack ls
+  register: docker_stack_list
+
+- name: Remove if stack already exists if remove_before_deploy is true.
+  win_shell: docker stack rm {{ docker_stack_name }}
+  register: docker_stack_remove
+  when:
+    - (remove_stack_before_deploy | bool)
+    - "docker_stack_name in docker_stack_list.stdout"
+
+- name: Pause for a while if stack removed.
+  pause:
+    seconds: 120
+  when: "docker_stack_remove.changed"
+
+- name: Check already created secrets.
+  win_shell: "docker secret ls"
+  register: already_created_secrets
+
+- name: Remove secrets if it is already created.
+  win_shell: "docker secret rm {{ item['key'] }}"
+  with_items: "{{ docker_secrets }}"
+  when: 
+    - "item['key'] in already_created_secrets.stdout"
+    - "(re_init_already_existing_secrets | bool)"
+
+- name: Check already created secrets.
+  win_shell: "docker secret ls"
+  register: already_created_secrets
+
+- name: Create secrets required for the  deployment stack.
+  win_shell: "echo {{ item['value'] }} | docker secret create {{ item['key'] }} -"
+  with_items: "{{ docker_secrets }}"
+  when: 
+    - "item['key'] not in already_created_secrets.stdout"
+
+- name: Get the list of already deployed stacks.
+  win_shell: docker stack ls
+  register: docker_stack_list
+
+- include: network.yml
+  when: 
+    - (remove_stack_before_deploy | bool)
+
+- include: orderly-deploy-services.yml
+  with_items: "{{ services_to_deploy }}"
+...

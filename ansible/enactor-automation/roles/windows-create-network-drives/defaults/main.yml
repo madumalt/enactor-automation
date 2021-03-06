@@ -1,0 +1,24 @@
+# This file contains the default values of variables of the ansible role.
+# These can be overriden before the execution either with -e or --ext-vars options
+# while running the ansible-playbooks that contain the this role.
+---
+# Docker volume list to be created.
+volume_list:
+  - enactor-data-ema-home
+  - enactor-data-emc-home
+  - enactor-data-emp-home
+  - enactor-data-emr-home
+  - enactor-data-ems-home
+  - enactor-data-oma-home
+  - enactor-data-omp-home
+  - enactor-data-oms-home
+  - enactor-data-pdp1-home
+  - enactor-data-ss1-home
+  - enactor-data-ws-home
+  - enactor-data-solr-product_search_solrj
+
+# NFS (In windows it is actually SMB) related config variables.
+obtain_nfs_server_ip_from_inventory: true
+nfs_server_ip: "<nfs-load-balancer-ip>"
+mount_script_location: "/home/thilinamad/ENACTOR-CLOUD/SelfServiceManagementApp/test-location"
+...

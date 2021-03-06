@@ -1,0 +1,19 @@
+# Setup SMB file-share.
+---
+- name: Make sure sharing directory list exists.
+  win_file:
+    path: "C:\\File-Share\\{{ item }}"
+    state: directory
+  with_items: "{{ volume_list }}"
+
+- name: Share the directories.
+  win_share:
+    name: "{{ item }}"
+    description: EM application home directory
+    path: "C:\\File-Share\\{{ item }}"
+    state: present
+    list: yes
+    full: "{{ ansible_user }}"
+    change: "{{ ansible_user }}"
+  with_items: "{{ volume_list }}" 
+...

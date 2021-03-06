@@ -1,0 +1,7 @@
+# Task to set the swarm manager address as a fact.
+---
+- name: Declare the address of the first Swarm manager as a fact.
+  set_fact:
+    swarm_manager_address: "{{ private_ip }}:{{ docker_swarm_port }}"
+  when: "inventory_hostname == groups['manager_nodes'][0]"
+...

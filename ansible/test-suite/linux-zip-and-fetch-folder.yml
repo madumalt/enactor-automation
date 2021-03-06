@@ -1,0 +1,7 @@
+---
+- name: Playbook to zip and fetch a remote directory
+  hosts: "{{ host_group }}"
+
+  roles:
+    - linux-zip-and-fetch-folder
+...

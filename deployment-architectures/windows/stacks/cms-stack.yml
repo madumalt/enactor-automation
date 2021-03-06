@@ -1,0 +1,53 @@
+---
+version: '3.4'
+
+networks:
+  enactor-stack-overlay:
+    external: 
+      name: enactor-stack-overlay
+
+volumes:
+  enactor-data-cms-home:
+    external: true
+    name: enactor-data-cms-home
+
+services:
+  cm-services:
+    image: enactordev-on.azurecr.io/enactorstandard/win/cms:REPLACE_DOCKER_TAG
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []  
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3                  
+    env_file:
+      - ./envs/common.env  
+      - ./envs/common-cm.env   
+      - ./envs/cms.env
+    ports:
+      - target: 39841
+        published: 39841
+        mode: host
+      - target: 52251
+        published: 52251
+        mode: host
+    networks:
+      - enactor-stack-overlay
+    volumes:
+      - enactor-data-cms-home:c:\enactor\app\home
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

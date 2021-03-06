@@ -1,0 +1,7 @@
+---
+- name: Playbook to run any command on a remote host
+  hosts: '{{host_group}}'
+
+  roles:
+    - linux-run-command
+...

@@ -1,0 +1,71 @@
+---
+version: '3.7'
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+volumes:
+  db-data-is:
+    external: true
+    name: db-data-is
+
+secrets:
+  1_mysql_6:
+    file: ./resources/1_mysql_6.sql
+  2_licence:
+    file: ./resources/2_licence.sql
+  3_populate_6:
+    file: ./resources/3_populate_6.sql
+  4_populate_enactor_data_with_cm:
+    file: ./resources/4_Populate_Enactor_Data_With_CM_1.sql
+
+services:
+  mysql-is:
+    image: enactordev-on.azurecr.io/enactor-mysql:latest
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+    environment:
+      - MYSQL_ROOT_PASSWORD=enactor
+      - MYSQL_DATABASE=enactoris
+    ports:
+      - target: 3306
+        published: 3356
+        mode: ingress
+    networks:
+      - enactor-stack-overlay
+    volumes:
+      - db-data-is:/var/lib/mysql  
+    secrets:
+      - source: 1_mysql_6
+        target: /docker-entrypoint-initdb.d/1_mysql_6.sql
+        mode: 0555
+      - source: 2_licence
+        target: /docker-entrypoint-initdb.d/2_licence.sql
+        mode: 0555
+      - source: 3_populate_6
+        target: /docker-entrypoint-initdb.d/3_populate_6.sql
+        mode: 0555 
+      - source: 4_populate_enactor_data_with_cm
+        target: /docker-entrypoint-initdb.d/4_Populate_Enactor_Data_With_CM_1.sql
+        mode: 0555          
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

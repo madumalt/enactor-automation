@@ -1,0 +1,33 @@
+# Contains the tasks required to deploy enactor suite services in the given order.
+---
+- name: Initialize the deploy command
+  set_fact:
+    stack_deploy_command: "docker stack deploy {{ docker_stack_name }}"
+
+- name: Construct the deploy command
+  set_fact:
+    stack_deploy_command: "{{ stack_deploy_command }} -c {{ deploy_suite_destination }}/{{ item['name'] }}"
+  
+- name: Deploy enactor application suite as docker stack.
+  win_shell: "{{ stack_deploy_command }} --with-registry-auth"
+  async: 500
+  poll: 10
+
+- name: Wait for http 200 success response on the given endpoint
+  win_uri:
+    url: "http://0.0.0.0:{{ item['wait_end_point'] }}"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 120
+  delay: 10
+  when:
+    - item['wait_end_point'] is defined
+    - not (item['wait_end_point'] == "")
+
+- name: Wait for a certain given timeout.
+  pause:
+    seconds: "{{ item['wait_timeout'] }}"
+  when: 
+    - "(item['wait_timeout'] | int) > 0"
+...

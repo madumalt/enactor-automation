@@ -1,0 +1,7 @@
+# Task to get docker info.
+---
+- name: Check if "Swarm Mode" is enabled.
+  shell: docker info
+  changed_when: false
+  register: docker_info
+...

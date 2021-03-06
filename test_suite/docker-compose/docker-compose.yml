@@ -1,0 +1,91 @@
+version: '2.2'
+services:
+
+  # ===================== Elastic Search ===============================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:REPLACE_ELASTICSEARCH_VERSION
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+
+  # ====================== Kibana ===================================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:REPLACE_ELASTICSEARCH_VERSION
+    container_name: kibana
+    environment:
+      - SERVER_NAME=kibana
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - 5601:5601
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "http://localhost:5601/"]
+      retries: 6
+
+
+  # ==================== Metric Beats ============================
+  metricbeats:
+    image: docker.elastic.co/beats/metricbeat:REPLACE_ELASTICSEARCH_VERSION
+    container_name: metricbeats
+    command: ["metricbeat", "--strict.perms=false", "-system.hostfs=/hostfs"]
+    user: root
+    env_file:
+      - .env
+    environment:
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_HOST=172.24.24.1
+      - MYSQL_PORT=3306
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
+#      kibana:
+#        condition: service_healthy
+    volumes:
+      - metricbeatdata:/usr/share/metricbeat/data
+      - ${PWD}/metricbeat.docker.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      #      - type: volume
+      #        source: $(pwd)/metricbeat.docker.yml
+      #        target: /usr/share/metricbeat/metricbeat.yml
+      #        read_only: true
+    #    network_mode: host
+
+  test-suite:
+    image: enactorsandbox.azurecr.io/emperformancetestsuite/test-suite:REPLACE_TEST_SUITE_VERSION
+    container_name: test-suite
+    env_file:
+      - .env
+    volumes:
+      - test-suite-data:/enactor/app/home
+
+volumes:
+  esdata:
+    driver: local
+  metricbeatdata:
+    driver: local
+  test-suite-data:
+    driver: local

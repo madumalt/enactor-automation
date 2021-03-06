@@ -1,0 +1,10 @@
+---
+- name: Playbook to deploy enactor-suite on windows based systems.
+  hosts: 
+    - manager_nodes
+  become_method: runas
+  become: true
+
+  roles:
+    - windows-deploy-suite
+...

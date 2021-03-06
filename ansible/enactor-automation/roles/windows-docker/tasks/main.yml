@@ -1,0 +1,25 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+- include_tasks: features.yml
+
+- include_tasks: reboot.yml
+  when: windows_container_feature['reboot_required']
+
+- include_tasks: docker.yml
+
+- include_tasks: service.yml
+
+- name: Copy the docker daemon json to the remote machine.
+  win_template:
+    src: docker-daemon-json.j2
+    dest: "%programdata%\\docker\\config\\daemon.json"
+  when: docker_install['changed'] | bool
+  register: add_daemon_json
+
+- include_tasks: reboot.yml
+  when: docker_install['changed'] | bool or add_daemon_json['changed'] | bool
+
+- include_tasks: firewall.yml
+...

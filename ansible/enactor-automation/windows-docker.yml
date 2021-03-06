@@ -1,0 +1,12 @@
+---
+- name: Playbook for windows based systems
+  hosts:
+    - manager_nodes
+    - worker_nodes
+    - tester_nodes
+  become_method: runas
+  become: true
+
+  roles:
+    - windows-docker
+...

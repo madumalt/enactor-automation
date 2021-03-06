@@ -1,0 +1,8 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+- name: Create required docker volumes.
+  win_shell: "docker volume create {{ item }}"
+  with_items: "{{ volume_list }}"
+...

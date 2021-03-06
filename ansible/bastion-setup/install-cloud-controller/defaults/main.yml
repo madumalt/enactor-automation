@@ -1,0 +1,10 @@
+# This file contains the default values of variables of the ansible role.
+# These can be overriden before the execution either with -e or --ext-vars options
+# while running the ansible-playbooks that contain the this role.
+---
+# A list of users who will be added to the docker group.
+docker_users:
+  - "{{ ansible_user }}"
+svn_username: "<svn-username>"
+svn_password: "<svn-password>"
+...

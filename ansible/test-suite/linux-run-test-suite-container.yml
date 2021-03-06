@@ -1,0 +1,7 @@
+---
+- name: Playbook to run test-suite container in tester node
+  hosts: '{{host_group}}'
+
+  roles:
+    - linux-run-test-suite-container
+...

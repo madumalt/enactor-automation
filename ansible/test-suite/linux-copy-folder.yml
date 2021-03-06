@@ -1,0 +1,7 @@
+---
+- name: Playbook to copy a local folder to remote
+  hosts: "{{ host_group }}"
+
+  roles:
+    - linux-copy-folder
+...

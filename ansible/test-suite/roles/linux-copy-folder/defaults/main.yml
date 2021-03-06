@@ -1,0 +1,10 @@
+---
+become: no
+skip_testers: no
+skip_managers: no
+
+source_directory: ''
+destination_directory: ''
+
+host_group: 'all'
+...

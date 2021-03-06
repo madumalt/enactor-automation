@@ -1,0 +1,33 @@
+---
+#- name: ZIP source directory
+#  archive:
+#    path: '{{source_directory}}'
+#    dest: '{{zip_file_location}}'
+#    format: zip
+#  when: not skip_zipping
+
+- name: Make sure prerequisite unzip is installed on the machine.
+  package:
+    name: unzip
+    state: present
+  become: true
+
+- name: Clean destination directory
+  file:
+    state: absent
+    path: "{{ destination_directory }}"
+  become: '{{become}}'
+
+- name: Creates the destination directory to unzip the zip
+  file:
+    path: "{{ destination_directory }}"
+    state: directory
+  become: '{{become}}'
+
+- name: Unzip zip to the destination directory
+  unarchive:
+    src: "{{ zip_file_location }}"
+    dest: "{{ destination_directory }}"
+    remote_src: false
+  become: '{{become}}'
+...

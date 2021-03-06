@@ -1,0 +1,13 @@
+# Contains the tasks that are required to transfer a zip file and extract it.
+---
+- name: Creates the directory enactor-suite to unwrap deployment stack.
+  file:
+    path: "{{ deploy_suite_destination }}"
+    state: directory
+
+- name: Unzip the deployment stack to enactor-suite directory.
+  unarchive:
+    src: "{{ deploy_suite_zip_location }}"
+    dest: "{{ deploy_suite_destination }}"
+    remote_src: false
+...

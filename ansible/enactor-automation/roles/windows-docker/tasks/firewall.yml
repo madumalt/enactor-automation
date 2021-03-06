@@ -1,0 +1,82 @@
+# Contains tasks to enable firewall rules required for docker swarm.
+---
+- name: Configuring windows firewall, Docker Swarm port for cluster management, in.
+  win_firewall_rule:
+    name: docker_cluster_management_port_in
+    direction: in
+    action: allow
+    protocol: TCP
+    localport: "{{ cluster_management_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for cluster management, out.
+  win_firewall_rule:
+    name: docker_cluster_management_port_out
+    direction: out
+    action: allow
+    protocol: TCP
+    localport: "{{ cluster_management_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for communication among nodes, TCP, in.
+  win_firewall_rule:
+    name: docker_communication_among_nodes_port_tcp_in
+    direction: in
+    action: allow
+    protocol: TCP
+    localport: "{{ communication_among_nodes_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for communication among nodes, TCP, out.
+  win_firewall_rule:
+    name: docker_communication_among_nodes_port_tcp_out
+    direction: out
+    action: allow
+    protocol: TCP
+    localport: "{{ communication_among_nodes_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for communication among nodes, UDP, in.
+  win_firewall_rule:
+    name: docker_communication_among_nodes_port_udp_in
+    direction: in
+    action: allow
+    protocol: UDP
+    localport: "{{ communication_among_nodes_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for communication among nodes, UDP, out.
+  win_firewall_rule:
+    name: docker_communication_among_nodes_port_udp_out
+    direction: out
+    action: allow
+    protocol: UDP
+    localport: "{{ communication_among_nodes_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for overlay_network_traffic_port, in.
+  win_firewall_rule:
+    name: docker_overlay_network_traffic_port_in
+    direction: in
+    action: allow
+    protocol: TCP
+    localport: "{{ overlay_network_traffic_port }}"
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Configuring windows firewall, Docker Swarm port for overlay_network_traffic_port, out.
+  win_firewall_rule:
+    name: docker_overlay_network_traffic_port_out
+    direction: out
+    action: allow
+    protocol: TCP
+    localport: "{{ overlay_network_traffic_port }}"
+    state: present
+  when: docker_package_state == 'present'
+...

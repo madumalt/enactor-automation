@@ -1,0 +1,36 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+# In this role shell module is utilized instead of docker_swarm module because docker_swarm does not have --availability option.
+# Set availability as 'drain' for the manager nodes to make sure no services get deployed in manager nodes.
+
+- include_tasks: set-swarm-facts.yml
+
+- include_tasks: get-swarm-mode-info.yml
+
+- include_tasks: leave-swarm-if-error.yml
+
+- include_tasks: get-swarm-mode-info.yml
+
+- include_tasks: init-swarm-mode.yml
+
+- include_tasks: worker-join-token.yml
+
+- include_tasks: manager-join-token.yml
+
+- include_tasks: set-swarm-manager-address.yml
+
+- include_tasks: distribute-swarm-manager-address.yml
+
+- include_tasks: join-workers.yml
+
+- include_tasks: join-managers.yml
+
+- include_tasks: remove-existing-node-labels.yml
+
+- include_tasks: add-node-labels.yml
+  with_items: "{{ docker_node_labels.split(',') }}"
+  loop_control:
+    loop_var: node_label
+...

@@ -1,0 +1,7 @@
+---
+- name: Copy a folder to remote hosts
+  copy:
+    src: '{{source_directory}}'
+    dest: '{{destination_directory}}'
+  become: '{{become}}'
+...

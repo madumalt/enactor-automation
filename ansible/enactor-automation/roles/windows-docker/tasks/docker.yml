@@ -1,0 +1,20 @@
+# Contains tasks to install docker.
+---
+- name: Add NuGet Package Provider Minimum version
+  win_shell: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+  when: docker_package_state == 'present'
+
+- name: Add DockerMsftProviderInsider powershell module repository
+  win_psmodule:
+    name: DockerMsftProviderInsider
+    repository: PSGallery
+    state: present
+  when: docker_package_state == 'present'
+
+- name: Install Docker package
+  win_shell: Install-Package -ProviderName "DockerMsftProviderInsider" -Name "Docker" -RequiredVersion "{{ docker_version }}" -Force
+  args:
+    creates: "%programdata%\\Docker\\metadata.json"
+  register: docker_install
+  when: docker_package_state == 'present'
+...

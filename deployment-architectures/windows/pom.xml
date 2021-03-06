@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.enactor.docker.swarm</groupId>
+	<artifactId>windows-swarm</artifactId>
+	<packaging>pom</packaging>
+	<name>Enactor Windows Swarm Stacks</name>
+
+	<parent>
+		<groupId>com.enactor.docker.swarm</groupId>
+		<artifactId>parent-pom</artifactId>
+		<version>stack</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources-enactor-application</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}</directory>
+									<excludes>
+										<exclude>pom.xml</exclude>
+									</excludes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Update tokens in .env files</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- Replace place holders  -->
+								<replace dir="${stack.base}" includes="*.yml"  token="REPLACE_DOCKER_TAG" value="${STANDARD_DOCKER_VERSION}"  />
+								<replace dir="${stack.base}" includes="*.yml"  token="REPLACE_DOCKER_MYSQL_TAG" value="${STANDARD_MYSQL_VERSION}"  />
+								<replace dir="${env.base}" includes="*.env"  token="REPLACE_IP" value="${PUBLIC_IP}"  />
+								<!-- Environment files for containers -->								
+								<copy todir="${project.build.directory}/config">
+									<fileset dir="${stack.base}">
+										<include name="*.yml"/>
+									</fileset>
+								</copy>
+								<copy todir="${project.build.directory}/config/envs">
+									<fileset dir="${env.base}">
+										<include name="**/*"/>
+									</fileset>
+								</copy>	
+								<copy todir="${project.build.directory}/config/resources">
+									<fileset dir="${resource.base}">
+										<include name="**/*"/>
+									</fileset>
+								</copy>																	
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create-zipped-config</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>assemble-compose.xml</descriptor>
+							</descriptors>
+                            <finalName>windows-swarm-stack</finalName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>	
+								
+		</plugins>
+	</build>
+</project>

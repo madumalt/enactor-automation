@@ -1,0 +1,64 @@
+---
+version: '3.4'
+
+networks:
+  enactor-stack-overlay:
+    external: 
+      name: enactor-stack-overlay
+
+volumes:
+  enactor-data-emp-home:
+    external: true
+    name: enactor-data-emp-home
+  enactor-data-solr-product_search_solrj:
+    external: true
+    name: enactor-data-solr-product_search_solrj
+
+services:
+  em-processing:
+    image: enactordev-on.azurecr.io/enactorstandard/win/emp:REPLACE_DOCKER_TAG
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: dnsrr
+      placement:
+        constraints: []  
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+    ports:
+      - target: 39832
+        published: 39832
+        mode: host
+      - target: 39847
+        published: 39847
+        mode: host
+      - target: 52242
+        published: 52242
+        mode: host
+      - target: 52257
+        published: 52257
+        mode: host
+    networks:
+      - enactor-stack-overlay             
+    env_file:
+      - ./envs/common.env  
+      - ./envs/common-em.env  
+      - ./envs/emp.env
+    volumes:
+      - enactor-data-emp-home:c:\enactor\app\home
+      - enactor-data-solr-product_search_solrj:c:\enactor\shared\solr-6.0.0\server\solr\ProductSearchSolrj
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

@@ -1,0 +1,17 @@
+# Do the required host level configs required for the elasticsearch to run.
+# Here the assumptions is that other services will not be deployed in the those nodes.
+---
+# Set vm.swappiness to 1 in /etc/sysctl.conf
+- name: Disabling the swap memory on the host.
+  sysctl:
+    name: vm.swappiness
+    value: 1
+    state: present
+
+# Set vm.max_map_count to 262144 in /etc/sysctl.conf
+- name: Setting vm.max_map_count to elasticsearch required value.
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+...

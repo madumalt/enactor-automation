@@ -1,0 +1,29 @@
+# This file contains the default values of variables of the ansible role.
+# These can be overriden before the execution either with -e or --ext-vars options
+# while running the ansible-playbooks that contain the this role.
+---
+# Docker package name and required state.
+docker_package: docker
+docker_package_state: present
+docker_version: 18.03.1-ee-10
+
+# Service options.
+docker_service_state: started
+docker_service_enabled: true
+
+# Docker Swarm cluster management port. TCP only.
+cluster_management_port: 2377
+# Docker Swarm port for communication among nodes. Both UDP and TCP.
+communication_among_nodes_port: 7946
+# Docker Swarm overlay network traffic port. TCP only.
+overlay_network_traffic_port: 4789
+
+# Prerequisites python modules
+install_python_modules: true
+python_modules:
+  - virtualenv
+  - setuptools
+  - docker
+  - jsondiff
+  - pyyaml
+...

@@ -1,0 +1,50 @@
+# Add docker repository and repository keys for linux Debian distributions.
+---
+- name: Ensure old versions of Docker are not installed.
+  package:
+    name:
+      - docker
+      - docker-engine
+    state: absent
+  when:
+    - docker_uninstall_first | bool
+
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+    state: present
+
+- name: Add docker apt key.
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+  register: add_repository_key
+  ignore_errors: "{{ docker_apt_ignore_key_error }}"
+
+- name: Ensure curl is present (on older systems without SNI).
+  package: 
+    name: curl 
+    state: present
+  when: add_repository_key is failed
+
+- name: Add docker apt key (alternative for older systems without SNI).
+  shell: "curl -sSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+  args:
+    warn: false
+  when: add_repository_key is failed
+
+- name: Add docker repository.
+  apt_repository:
+    repo: "{{ docker_apt_repository }}"
+    state: present
+    update_cache: true
+
+- name: Install docker.
+  package:
+    name: "{{ docker_debian_full_version }}"
+    state: "{{ docker_package_state }}"
+  register: install_docker
+...

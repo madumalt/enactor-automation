@@ -1,0 +1,47 @@
+{
+    "all": {
+        "children": {
+            "manager_nodes": {
+                "hosts": {
+                    "<UNIQUE_HOST_NAME_1>": {
+                        "ansible_become_pass": "<MACHINE_PASSWORD_FOR_SUDO>",
+                        "ansible_become_user": "<MACHINE_SUDO_USER>",
+                        "ansible_host": "<MACHINE_PUBLIC_IP>",
+                        "ansible_password": "<MACHINE_SSH_PASSWORD>",
+                        "ansible_port": "22",
+                        "ansible_python_interpreter": "/usr/bin/python3",
+                        "ansible_user": "<MACHINE_SSH_USERNAME>",
+                        "docker_node_labels": "all=true",
+                        "private_ip": "<MACHINE_PRIVATE_IP>",
+                        "allow_service_deployment": "true"
+                    }
+                }
+            },
+            "worker_nodes": {
+                "hosts": {
+                    "<UNIQUE_HOST_NAME_2>": {
+                        "ansible_become_pass": "<MACHINE_PASSWORD_FOR_SUDO>",
+                        "ansible_become_user": "<MACHINE_SUDO_USER>",
+                        "ansible_host": "<MACHINE_PUBLIC_IP>",
+                        "ansible_password": "<MACHINE_SSH_PASSWORD>",
+                        "ansible_port": "22",
+                        "ansible_python_interpreter": "/usr/bin/python3",
+                        "ansible_user": "<MACHINE_SSH_USERNAME>",
+                        "docker_node_labels": "all=true",
+                        "private_ip": "<MACHINE_PRIVATE_IP>",
+                        "allow_service_deployment": "true"
+                    }
+                }
+            },
+            "bastion_nodes": {
+                "hosts": {}
+            },
+            "other_nodes": {
+                "hosts": {}
+            },
+            "storage_nodes": {
+                "hosts": {}
+            }
+        }
+    }
+}

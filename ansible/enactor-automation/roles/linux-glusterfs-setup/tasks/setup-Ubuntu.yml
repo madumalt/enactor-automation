@@ -1,0 +1,26 @@
+# Contains tasks to install glusterfs server & client in Linux Ubuntu.
+---
+- name: Ensure PPA for GlusterFS is present.
+  apt_repository:
+    repo: 'ppa:gluster/glusterfs-{{ glusterfs_ppa_version }}'
+    state: present
+    update_cache: true
+  register: glusterfs_ppa_added
+  when: glusterfs_ppa_use
+
+- name: Ensure GlusterFS will reinstall if the PPA was just added.
+  apt:
+    name:
+      - glusterfs-server
+      - glusterfs-client
+    state: absent
+  when: glusterfs_ppa_added.changed
+
+- name: Ensure GlusterFS is installed.
+  apt:
+    name:
+      - glusterfs-server
+      - glusterfs-client
+    state: present
+    default_release: "{{ glusterfs_default_release }}"
+...

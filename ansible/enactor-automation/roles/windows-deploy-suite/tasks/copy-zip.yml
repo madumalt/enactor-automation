@@ -1,0 +1,18 @@
+# Contains the tasks that are required to transfer a zip file and extract it.
+---
+- name: Create the destination folder (enactor-suite).
+  win_file:
+    path: "{{ deploy_suite_destination }}"
+    state: directory
+
+- name: Copy the depolyment stack zip file to remote machine.
+  win_copy:
+    src: "{{ deploy_suite_zip_location }}"
+    dest: "{{ deploy_suite_destination }}\\{{destination_stack_bundle_zip_name}}"
+
+- name: Unzip the deployment stack to enactor-suite directory.
+  win_unzip:
+    src: "{{ deploy_suite_destination }}\\{{destination_stack_bundle_zip_name}}"
+    dest: "{{ deploy_suite_destination }}"
+    recurse: false
+...

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.enactor.performance.suite</groupId>
+    <artifactId>docker-compose</artifactId>
+    <version>stack</version>
+    <packaging>pom</packaging>
+    <name>EM Performance Test Suite - Docker Compose</name>
+
+    <properties>
+        <docker-compose.file>docker-compose.yml</docker-compose.file>
+        <elasticsearch.version>6.8.0</elasticsearch.version>
+        <test-suite.version>dev</test-suite.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources-enactor-application</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <excludes>
+                                        <exclude>pom.xml</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>Update tokens in .env files</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- Update docker compose file  -->
+                                <replace dir="${project.build.directory}" includes="*.yml" token="REPLACE_ELASTICSEARCH_VERSION" value="${elasticsearch.version}"/>
+                                <replace dir="${project.build.directory}" includes="*.yml" token="REPLACE_TEST_SUITE_VERSION" value="${test-suite.version}"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

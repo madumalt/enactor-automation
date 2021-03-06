@@ -1,0 +1,4 @@
+# Variable values for RedHat.
+---
+nfs_server_daemon: nfs
+...

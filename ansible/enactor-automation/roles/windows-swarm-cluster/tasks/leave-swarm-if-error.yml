@@ -1,0 +1,8 @@
+# Task to leave swarm if in error state.
+---
+- name: "Leave swarm cluster if Swarm: error"
+  win_shell: docker swarm leave --force
+  changed_when: false
+  when: 
+    - "'Swarm: error' in docker_info.stdout"
+...

@@ -1,0 +1,15 @@
+# Task to join the managers to the swarm.
+---
+- name: Join the pending Swarm manager nodes.
+  shell: docker swarm join
+        --listen-addr "{{ private_ip }}:{{ docker_swarm_port }}"
+        --advertise-addr "{{ private_ip }}:{{ docker_swarm_port }}"
+        --token "{{ swarm_manager_token.stdout }}"
+        "{{ swarm_manager_address }}"
+  changed_when: false
+  when: 
+    - "docker_info.stdout.find('Swarm: active') == -1"
+    - "docker_info.stdout.find('Swarm: pending') == -1"
+    - "'manager_nodes' in group_names"
+    - "inventory_hostname != groups['manager_nodes'][0]"
+...

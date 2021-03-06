@@ -1,0 +1,9 @@
+# Contains tasks to enable docker as a service.
+---
+- name: Start and enable docker service.
+  win_service:
+    name: "{{ docker_package }}"
+    state: "{{ docker_service_state }}"
+    start_mode: auto
+  when: docker_service_enabled
+...

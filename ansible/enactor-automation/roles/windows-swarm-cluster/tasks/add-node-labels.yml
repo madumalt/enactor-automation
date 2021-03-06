@@ -1,0 +1,15 @@
+# A docker engine label get added in configure-nodes step.
+# That label consists private_ip of the node. 
+# Here it is being utilized to identify the corresponding docker node on the master.
+---
+- name: Get the docker node id of the node.
+  win_shell: docker node ls --filter label=private_ip={{ private_ip }} --format {% raw %}'{{.ID}}'{% endraw %}
+  register: node_id
+  delegate_to: "{{ groups['manager_nodes'][0] }}"
+  delegate_facts: false
+
+- name: Add the docker node labels
+  win_shell: docker node update --label-add {{ node_label | trim }} {{ node_id.stdout }}
+  delegate_to: "{{ groups['manager_nodes'][0] }}"
+  delegate_facts: false
+...

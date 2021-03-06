@@ -1,0 +1,12 @@
+---
+become: no
+skip_testers: no
+skip_managers: no
+
+destination_file_location: 'archive.zip'
+zip_file_location: '/home/{{ansible_user}}/archived.zip'
+source_directory: '<source_directory>'
+with_flat: yes
+
+host_group: 'all'
+...

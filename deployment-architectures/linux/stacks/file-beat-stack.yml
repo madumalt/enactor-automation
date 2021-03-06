@@ -1,0 +1,52 @@
+---
+version: '3.7'
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+configs:
+  filebeat-config:
+    file: ./envs/monitoring/filebeat/filebeat.yml
+
+services:
+  file-beats:
+    image: enactordev-on.azurecr.io/enactorbase/lin/filebeat:2.6.1
+    user: root
+    deploy:
+      mode: global
+      placement:
+        constraints: []
+      restart_policy:
+        condition: on-failure
+        delay: 2s     
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: continue
+        monitor: 60s 
+        max_failure_ratio: 0.3
+    networks:
+      - enactor-stack-overlay
+    ports: []
+    configs:
+      - source: filebeat-config
+        target: /usr/share/filebeat/filebeat.yml
+        mode: 0555
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

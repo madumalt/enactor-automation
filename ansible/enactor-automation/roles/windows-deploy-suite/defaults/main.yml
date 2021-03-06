@@ -1,0 +1,36 @@
+# This file contains the default values of variables of the ansible role.
+# These can be overriden before the execution either with -e or --ext-vars options
+# while running the ansible-playbooks that contain the this role.
+---
+deploy_suite_zip_location:  "<zip-file-location>"
+deploy_suite_destination: "C:\\enactor\\enactor-suite"
+destination_stack_bundle_zip_name: "stack-bundle.zip"
+
+re_init_already_existing_secrets: false
+docker_secrets:
+  - key: "keystore-password"
+    value: "dummy-value"
+  - key: "my-sql-username"
+    value: "dummy-value"
+  - key: "my-sql-password"
+    value: "dummy-value"
+
+docker_registry: "<docker-registry-url>"
+docker_registry_username: "<docker-registry-username with read access>"
+docker_registry_password: "<docker-registry-password>"
+
+# This network name is used in corresponding stack.yml files, under networks: section.
+# In case feel like changing the name please do change it in stack.yml files as well.
+docker_network_name: enactor-stack-overlay
+docker_network_sub_net: 172.20.0.0/24
+docker_network_gateway: 172.20.0.1
+docker_network_driver: overlay
+re_init_docker_network_if_exist: true
+
+docker_stack_name: "dockerstack"
+# The following 2 are introduced for restaring the stack.
+# TODO make user give restart=true as external var (using -e option) when running the playbook
+# and depending on the existense of such a var assign value to these vars.
+remove_stack_before_deploy: false
+skip_copying: false
+...

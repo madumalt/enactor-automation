@@ -1,0 +1,55 @@
+---
+- debug:
+    var: volumes
+
+- name: Log into docker registry and force re-authorization.
+  docker_login:
+    registry: "{{ docker_registry }}"
+    username: "{{ docker_registry_username }}"
+    password: "{{ docker_registry_password }}"
+    reauthorize: true
+
+- name: Run test suite docker container
+  docker_container:
+    name: "{{container_name}}"
+    image: "{{docker_image}}"
+    detach: yes
+    pull: yes
+    recreate: yes
+    cleanup: yes
+    state: started
+    volume_driver: local
+    volumes: '{{volumes}}'
+    env:
+      SIMULATION_NAME: '{{ simulation_name }}'
+      SIMULATION_DURATION: '{{ duration }}'
+      SIMULATION_NO_OF_DEVICES: '{{ no_of_devices }}'
+      SIMULATION_NO_OF_THREADS: '{{ no_of_threads }}'
+      SIMULATION_TRANSACTION_TYPE: '{{ transaction_type }}'
+      SIMULATION_MAX_QUEUE_LENGTH: '{{ max_queue_length}}'
+      SIMULATION_INTER_ARRIVAL_TIME: '{{ inter_arrival_time }}'
+      SIMULATION_SERVICE_TIME: '{{service_time}}'
+      SIMULATION_SERVICE_TIME_STD: '{{service_time_std}}'
+      SIMULATION_MAX_SALE_ITEMS: '{{max_sale_items}}'
+      SIMULATION_COMPLETION_CHECK_INTERVAL: '{{completion_check_interval}}'
+      TARGET_PROVIDER: '{{target_provider}}'
+      TARGET_CUSTOMER: '{{target_customer}}'
+      TARGET_ENVIRONMENT: '{{target_environment}}'
+      TARGET_RELEASE_VERSION: '{{target_release_version}}'
+      SERVER_EM_HOST: '{{em_host}}'
+      SERVER_EM_PORT: '{{em_port}}'
+      SERVER_QUEUE: '{{server_queue}}'
+      ELASTIC_SEARCH_HOST: '{{elasticsearch_host}}'
+      ELASTIC_SEARCH_PORT: '{{elasticsearch_port}}'
+      ELASTIC_SEARCH_SCHEME: '{{elasticsearch_scheme}}'
+      KIBANA_BASE: '{{kibana_base}}'
+      JDBC_DRIVER: '{{jdbc_driver}}'
+      JDBC_URL: '{{jdbc_url}}'
+      JDBC_USER: '{{jdbc_user}}'
+      JDBC_PASSWORD: '{{jdbc_password}}'
+      PARAMS: '{{operation}}'
+  register: docker_container_output
+
+- debug:
+    msg: "Started container {{container_name}}"
+...

@@ -1,0 +1,7 @@
+---
+host_group: 'manager_nodes'
+
+docker_compose_directory: 'docker-compose'
+environment_variables: ''
+service_name: 'metricbeats'
+...

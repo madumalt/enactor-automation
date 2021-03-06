@@ -1,0 +1,7 @@
+# Contains the tasks to reboot the host machine.
+---
+- name: Rebooting server.
+  win_reboot:
+    # Maximum seconds to wait for machine to re-appear on the network and respond to a test command.
+    reboot_timeout: "3600"
+...

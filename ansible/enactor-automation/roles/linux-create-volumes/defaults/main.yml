@@ -1,0 +1,29 @@
+# This file contains the default values of variables of the ansible role.
+# These can be overriden before the execution either with -e or --ext-vars options
+# while running the ansible-playbooks that contain the this role.
+---
+# Docker volume list to be created.
+volume_list:
+  - enactor-data-ema-home
+  - enactor-data-emc-home
+  - enactor-data-emp-home
+  - enactor-data-emr-home
+  - enactor-data-ems-home
+  - enactor-data-is-home
+  - enactor-data-oma-home
+  - enactor-data-omp-home
+  - enactor-data-oms-home
+  - enactor-data-pdp1-home
+  - enactor-data-ss1-home
+  - enactor-data-ws-home
+  - enactor-data-solr-product_search_solrj
+
+# NFS related config variables.
+is_nfs: false
+obtain_nfs_server_ip_from_inventory: true
+nfs_server_ip: "<nfs-load-balancer-ip>"
+nfs_rpcbind_state: started
+nfs_rpcbind_enabled: true
+nfs_base_dir: "/mnt/enactor/volumes"
+nfs_export_options: "*(rw,sync,no_root_squash)"
+...

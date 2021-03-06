@@ -1,0 +1,7 @@
+---
+- name: Playbook to fetch a remote folder
+  hosts: "{{ host_group }}"
+
+  roles:
+    - linux-fetch-folder
+...

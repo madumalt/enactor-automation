@@ -1,0 +1,58 @@
+---
+version: '3.7'
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+volumes:
+  enactor-data-oms-home:
+    external: true
+    name: enactor-data-oms-home
+
+services:
+  om-services:
+    image: enactordev-on.azurecr.io/enactorstandard/lin/oms:REPLACE_DOCKER_TAG
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []  
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3                  
+    env_file:
+      - ./envs/common.env  
+      - ./envs/common-om.env 
+      - ./envs/oms.env
+    ports:
+      - target: 39837
+        published: 39837
+        mode: ingress
+      - target: 52247
+        published: 52247
+        mode: ingress
+    networks:
+      - enactor-stack-overlay
+    volumes:
+      - enactor-data-oms-home:/enactor/app/home 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

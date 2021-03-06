@@ -1,0 +1,16 @@
+# Powershell script to mount the network drive Z:
+$ErrorActionPreference='Stop';
+
+# Create the credentials for network drive.
+$user = "{{ ansible_user }}"
+$pword = ConvertTo-SecureString -String "{{ ansible_password }}" -AsPlainText -Force
+$credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $user, $pword
+
+# Mount the network drive
+Try {
+    New-PSDrive -Name 'NETWORK_DRIVE_LETTER' -PSProvider 'FileSystem' -Root "\\{{ nfs_server_ip }}\{{ item }}" -Scope 'Global' -Persist -Credential $credential -ErrorAction Stop
+} Catch {
+    echo "ERROR: Error in mounting the Network Drives. Terminating the container run!"
+    Throw "$_"
+}
+

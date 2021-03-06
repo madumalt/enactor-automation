@@ -1,0 +1,58 @@
+---
+version: '3.7'
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+volumes:
+  enactor-data-emc-home:
+    external: true
+    name: enactor-data-emc-home
+
+services:
+  em-cardauth:
+    image: enactordev-on.azurecr.io/enactorstandard/lin/emc:REPLACE_DOCKER_TAG
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []  
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3                  
+    env_file:
+      - ./envs/common.env  
+      - ./envs/common-em.env 
+      - ./envs/emc.env
+    ports:
+      - target: 39856
+        published: 39856
+        mode: ingress
+      - target: 52266
+        published: 52266
+        mode: ingress
+    networks:
+      - enactor-stack-overlay
+    volumes:
+      - enactor-data-emc-home:/enactor/app/home 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

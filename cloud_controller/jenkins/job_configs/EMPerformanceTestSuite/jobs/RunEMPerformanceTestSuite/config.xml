@@ -1,0 +1,277 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.33">
+    <actions>
+        <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.3.8"/>
+        <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.3.8">
+            <jobProperties/>
+            <triggers/>
+            <parameters/>
+            <options/>
+        </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+    </actions>
+    <description>EM Transaction Processing Performance Test Suite Pipeline</description>
+    <keepDependencies>false</keepDependencies>
+    <properties>
+        <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.0.8">
+            <siteName>https://enactor.atlassian.net/</siteName>
+        </hudson.plugins.jira.JiraProjectProperty>
+        <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
+            <useBuildBlocker>false</useBuildBlocker>
+            <blockLevel>GLOBAL</blockLevel>
+            <scanQueueFor>DISABLED</scanQueueFor>
+            <blockingJobs></blockingJobs>
+        </hudson.plugins.buildblocker.BuildBlockerProperty>
+        <jenkins.model.BuildDiscarderProperty>
+            <strategy class="hudson.tasks.LogRotator">
+                <daysToKeep>10</daysToKeep>
+                <numToKeep>10</numToKeep>
+                <artifactDaysToKeep>-1</artifactDaysToKeep>
+                <artifactNumToKeep>-1</artifactNumToKeep>
+            </strategy>
+        </jenkins.model.BuildDiscarderProperty>
+        <org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
+        <org.bstick12.jenkinsci.plugins.leastload.LeastLoadDisabledProperty plugin="leastload@2.0.1">
+            <leastLoadDisabled>false</leastLoadDisabled>
+        </org.bstick12.jenkinsci.plugins.leastload.LeastLoadDisabledProperty>
+        <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
+            <autoRebuild>false</autoRebuild>
+            <rebuildDisabled>false</rebuildDisabled>
+        </com.sonyericsson.rebuild.RebuildSettings>
+        <hudson.model.ParametersDefinitionProperty>
+            <parameterDefinitions>
+                <hudson.model.BooleanParameterDefinition>
+                    <name>TEST_FEATURE_BRANCH</name>
+                    <description>Select if you intend to test an EM from a feature branch</description>
+                    <defaultValue>false</defaultValue>
+                </hudson.model.BooleanParameterDefinition>
+                <hudson.model.StringParameterDefinition>
+                    <name>STANDARD_DOCKER_VERSION</name>
+                    <description>The docker release version for the intended platform release.</description>
+                    <defaultValue>2.5.20.34</defaultValue>
+                    <trim>true</trim>
+                </hudson.model.StringParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>STANDARD_MYSQL_VERSION</name>
+                    <description>Select the Enactor MySQL service docker image version you need to deploy</description>
+                    <defaultValue>latest</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>SIMULATION_DURATION</name>
+                    <description>Simulation duration in seconds</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>300</string>
+                            <string>600</string>
+                            <string>1200</string>
+                            <string>2400</string>
+                            <string>3600</string>
+                            <string>7200</string>
+                            <string>10800</string>
+                            <string>30</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>SIMULATION_NO_OF_DEVICES</name>
+                    <description>Number of devices to be used for the simulation</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>50</string>
+                            <string>1</string>
+                            <string>5</string>
+                            <string>10</string>
+                            <string>20</string>
+                            <string>30</string>
+                            <string>100</string>
+                            <string>200</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>SIMULATION_NO_OF_THREADS</name>
+                    <description>Number of threads to be used to send transactions</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>16</string>
+                            <string>8</string>
+                            <string>32</string>
+                            <string>64</string>
+                            <string>100</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>SIMULATION_TRANSACTION_TYPE</name>
+                    <description>Which transaction type to simulate</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>SALE</string>
+                            <string>QUOTE</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>SERVER_QUEUE</name>
+                    <description>EM Transaction Queue</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>EstateManagerTransactions</string>
+                            <string>ServerTransactions</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>DATABASE_TYPE</name>
+                    <description>EM Database Type</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>MySQL</string>
+                            <string>MSSQL</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>ELASTIC_SEARCH_HOST</name>
+                    <description>Host Name of the Elastic Search Server</description>
+                    <defaultValue>35.178.92.18</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>ELASTIC_SEARCH_PORT</name>
+                    <description>Port of the Elastic Search Server</description>
+                    <defaultValue>9200</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>ELASTIC_SEARCH_SCHEME</name>
+                    <description>Elastic Search server scheme (https or http)</description>
+                    <defaultValue>http</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>KIBANA_HOST</name>
+                    <description>Kibana Host Name</description>
+                    <defaultValue>35.178.92.18</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>KIBANA_PORT</name>
+                    <description>Kibana Port</description>
+                    <defaultValue>5601</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>CUSTOMER_NAME</name>
+                    <description>Customer Name</description>
+                    <defaultValue>Enactor</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <hudson.model.StringParameterDefinition>
+                    <name>ENV_NAME</name>
+                    <description>Environment Name</description>
+                    <defaultValue>PerformanceTesting</defaultValue>
+                    <trim>true</trim>
+                </hudson.model.StringParameterDefinition>
+                <hudson.model.ChoiceParameterDefinition>
+                    <name>PROVIDER</name>
+                    <description>Select deployment infrastructure type</description>
+                    <choices class="java.util.Arrays$ArrayList">
+                        <a class="string-array">
+                            <string>aws</string>
+                            <string>azure</string>
+                        </a>
+                    </choices>
+                </hudson.model.ChoiceParameterDefinition>
+                <com.cloudbees.plugins.credentials.CredentialsParameterDefinition plugin="credentials@2.1.19">
+                    <name>CLOUD_PROVIDER_CREDENTIALS</name>
+                    <description>AWS/Azure Credentials ID</description>
+                    <defaultValue>aws_devops_development</defaultValue>
+                    <credentialType>com.cloudbees.plugins.credentials.common.StandardCredentials</credentialType>
+                    <required>true</required>
+                </com.cloudbees.plugins.credentials.CredentialsParameterDefinition>
+                <hudson.model.StringParameterDefinition>
+                    <name>REGION</name>
+                    <description>Region ex: AWS -&gt; &quot;us-east-1&quot;, Azure -&gt; &quot;West US 2&quot;</description>
+                    <defaultValue>us-east-1</defaultValue>
+                    <trim>true</trim>
+                </hudson.model.StringParameterDefinition>
+                <com.cloudbees.plugins.credentials.CredentialsParameterDefinition plugin="credentials@2.1.19">
+                    <name>CONTAINER_REGISTRY_CREDENTIALS_ID</name>
+                    <description>Credentials for the container registry where images to be deployed are located</description>
+                    <defaultValue>cd314d32-5f0a-4dbe-aa83-a9d74bda0d42</defaultValue>
+                    <credentialType>com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl</credentialType>
+                    <required>true</required>
+                </com.cloudbees.plugins.credentials.CredentialsParameterDefinition>
+                <com.cloudbees.plugins.credentials.CredentialsParameterDefinition plugin="credentials@2.1.19">
+                    <name>SANDBOX_REGISTRY_CREDENTIALS</name>
+                    <description>Credentials for enactorsadbox.azurerc.io container registry</description>
+                    <defaultValue>f19e1121-4cea-4129-af4f-2eae655b13f9</defaultValue>
+                    <credentialType>com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl</credentialType>
+                    <required>false</required>
+                </com.cloudbees.plugins.credentials.CredentialsParameterDefinition>
+                <hudson.model.BooleanParameterDefinition>
+                    <name>SKIP_DATA_UPLOAD</name>
+                    <description>Select to skip licence file and data upload to be skipped</description>
+                    <defaultValue>false</defaultValue>
+                </hudson.model.BooleanParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>LICENCE_FILE_CONTENT</name>
+                    <description>The content of the Enactor Estate Licence which is to be used by the deployed EM</description>
+                    <defaultValue></defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>DATA_FILE_URL</name>
+                    <description>The URL for the zip/xml file of data to be imported</description>
+                    <defaultValue>https://dev.enactor.co.uk/releases/Demo/Packaged%20Releases/2.3.379/data/demo-data-estateManager-2.3.379.zip</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+                <com.cloudbees.plugins.credentials.CredentialsParameterDefinition plugin="credentials@2.1.19">
+                    <name>SVN_CREDENTIALS_ID</name>
+                    <description>Credentials for Enactor SVN</description>
+                    <defaultValue>72771537-75b6-4838-a194-752f342c71ae</defaultValue>
+                    <credentialType>com.cloudbees.plugins.credentials.common.StandardCredentials</credentialType>
+                    <required>false</required>
+                </com.cloudbees.plugins.credentials.CredentialsParameterDefinition>
+                <hudson.model.BooleanParameterDefinition>
+                    <name>DESTROY_INFRASTRUCTURE</name>
+                    <description>Select if infrastructure should be deleted once the test is over</description>
+                    <defaultValue>true</defaultValue>
+                </hudson.model.BooleanParameterDefinition>
+                <hudson.model.BooleanParameterDefinition>
+                    <name>FORCE_DESTROY_INFRASTRUCTURE</name>
+                    <description>Select if infrastructure should be deleted regardless of test outcome</description>
+                    <defaultValue>false</defaultValue>
+                </hudson.model.BooleanParameterDefinition>
+                <com.wangyin.parameter.WHideParameterDefinition plugin="hidden-parameter@0.0.4">
+                    <name>ENV_DIRECTORY_PREFIX</name>
+                    <description>The environment directory will be created in &quot;{CustomerName}/${ENV_DIRECTORY_PREFIX}/{EnvironmentName}&quot; directory</description>
+                    <defaultValue>trunk/EnactorDeploymentConfig</defaultValue>
+                </com.wangyin.parameter.WHideParameterDefinition>
+            </parameterDefinitions>
+        </hudson.model.ParametersDefinitionProperty>
+        <jenkins.advancedqueue.jobinclusion.strategy.JobInclusionJobProperty plugin="PrioritySorter@3.6.0">
+            <useJobGroup>false</useJobGroup>
+            <jobGroupName>Continuous</jobGroupName>
+        </jenkins.advancedqueue.jobinclusion.strategy.JobInclusionJobProperty>
+    </properties>
+    <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.70">
+        <scm class="hudson.scm.SubversionSCM" plugin="subversion@2.12.1">
+            <locations>
+                <hudson.scm.SubversionSCM_-ModuleLocation>
+                    <remote>${SELF_SERVICE_SVN_LOCATION_TRUNK}/cloud_controller/jenkins/pipeline_scripts</remote>
+                    <credentialsId>72771537-75b6-4838-a194-752f342c71ae</credentialsId>
+                    <local>.</local>
+                    <depthOption>infinity</depthOption>
+                    <ignoreExternalsOption>true</ignoreExternalsOption>
+                    <cancelProcessOnExternalsFail>true</cancelProcessOnExternalsFail>
+                </hudson.scm.SubversionSCM_-ModuleLocation>
+            </locations>
+            <excludedRegions></excludedRegions>
+            <includedRegions></includedRegions>
+            <excludedUsers></excludedUsers>
+            <excludedRevprop></excludedRevprop>
+            <excludedCommitMessages></excludedCommitMessages>
+            <workspaceUpdater class="hudson.scm.subversion.CheckoutUpdater"/>
+            <ignoreDirPropChanges>false</ignoreDirPropChanges>
+            <filterChangelog>false</filterChangelog>
+            <quietOperation>false</quietOperation>
+        </scm>
+        <scriptPath>performance_test_pipeline.groovy</scriptPath>
+        <lightweight>false</lightweight>
+    </definition>
+    <triggers/>
+    <disabled>false</disabled>
+</flow-definition>

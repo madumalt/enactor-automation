@@ -1,0 +1,61 @@
+---
+# For the elastic search to run, the host machine max_map_count should be at least 262144 or higher. 
+# This can be achieved through running "sudo sysctl -w vm.max_map_count=262144" (temporary)
+# To permanently set vm.max_map_count, need to set it in /etc/sysctl.conf.
+
+# Elasticsearch cluster should be bootstrapped with 'bootstrap.memory_lock' config set to 'true'.
+# For the above, need to disable swap memory in the host machine. 
+# https://stackoverflow.com/questions/55500300/elastic-in-docker-stack-swarm
+# https://www.elastic.co/guide/en/elasticsearch/reference/6.7/setup-configuration-memory.html
+
+version: "3.7"
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+volumes:
+  es1-data:
+    name: es1-data
+
+services: 
+  es1:
+    image: enactordev-on.azurecr.io/enactorbase/lin/elasticsearch:2.6.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []  
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+    ports:
+      - target: 9200
+        published: 9201
+        mode: ingress
+    networks:
+      - enactor-stack-overlay
+    env_file:
+      - ./envs/monitoring/elasticsearch/es1.env
+    volumes:
+      - es1-data:/usr/share/elasticsearch/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

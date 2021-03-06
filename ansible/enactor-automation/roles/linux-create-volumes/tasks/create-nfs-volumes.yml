@@ -1,0 +1,6 @@
+# Create NFS docker volumes to be mounted to the depolying swarm services.
+---
+- name: Create required nfs docker volumes.
+  shell: "docker volume create --driver local --opt type=nfs4 --opt o=addr={{ nfs_server_ip }},rw --opt device=:{{ nfs_base_dir }}/{{ item }} {{ item }}"
+  with_items: "{{ volume_list }}"
+...

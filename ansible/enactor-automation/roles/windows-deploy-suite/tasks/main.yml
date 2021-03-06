@@ -1,0 +1,13 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+- include_tasks: copy-zip.yml
+  when: 
+    - "inventory_hostname == groups['manager_nodes'][0]"
+    - not (skip_copying | bool)
+
+- include_tasks: deploy-suite.yml
+  when: 
+    - "inventory_hostname == groups['manager_nodes'][0]"
+...

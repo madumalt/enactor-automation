@@ -1,0 +1,12 @@
+---
+become: no
+skip_testers: no
+skip_managers: no
+
+skip_zipping: false
+zip_file_location: 'archived.zip'
+source_directory: ''
+destination_directory: ''
+
+host_group: 'all'
+...

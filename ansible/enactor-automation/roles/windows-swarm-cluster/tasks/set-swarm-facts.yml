@@ -1,0 +1,21 @@
+# Task to set required facts for the playbook.
+---
+- name: Get db_worker_nodes count.
+  set_fact:
+    manager_count: "{{ groups['manager_nodes'] | length }}"
+  when: "'manager_nodes' in groups"
+
+- name: Get db_worker_nodes count.
+  set_fact:
+    worker_count: "{{ groups['worker_nodes'] | length }}"
+  when: "'worker_nodes' in groups"
+
+- name: Get db_worker_nodes  count.
+  set_fact:
+    db_worker_count: "{{ groups['db_worker_nodes'] | length }}"
+  when: "'db_worker_nodes' in groups"
+
+- name: Declare whether nodes availibility set to drain or not. 
+  set_fact:
+    drain_host: "{{  not (allow_service_deployment | bool) }}"
+...

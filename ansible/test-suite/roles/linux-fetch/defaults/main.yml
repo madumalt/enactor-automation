@@ -1,0 +1,9 @@
+---
+become_root: no
+
+source_location: ''
+destination_location: ''
+with_flat: yes
+
+host_group: 'all'
+...

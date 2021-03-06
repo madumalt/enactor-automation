@@ -1,0 +1,8 @@
+# Contains tasks to enable container feature.
+---
+- name: Enabling Containers feature.
+  win_feature:
+    name: Containers
+    state: present
+  register: windows_container_feature
+...

@@ -1,0 +1,20 @@
+---
+- name: Make sure prerequisite zipfile is installed on the machine.
+  package:
+    name: zip
+    state: present
+  become: true
+
+- name: Archive a remote directory
+  archive:
+    path: '{{source_directory}}'
+    dest: '{{zip_file_location}}'
+    format: zip
+  become: '{{become}}'
+
+- name: Fetch zip file
+  fetch:
+    src: '{{zip_file_location}}'
+    dest: '{{destination_file_location}}'
+    flat: '{{with_flat}}'
+...

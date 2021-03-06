@@ -1,0 +1,29 @@
+---
+- debug:
+    var: docker_compose_directory
+
+- debug:
+    var: environment_variables
+
+- debug:
+    var: service_name
+
+- name: Create .env file
+  copy:
+    content: ''
+    dest: '{{docker_compose_directory}}/.env'
+
+- name: Write environment variables to env file
+  lineinfile:
+    dest: '{{docker_compose_directory}}/.env'
+    line: '{{item}}'
+  with_items: '{{environment_variables}}'
+
+
+- name: Run docker compose
+  shell: 'cd {{docker_compose_directory}} && docker-compose run -d {{service_name}}'
+  register: docker_compose_output
+
+- debug:
+    msg: "Started service {{service_name}} -> {{docker_compose_output.stdout}}"
+...

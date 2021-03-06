@@ -1,0 +1,9 @@
+# Install NFS server in linux debian distributions.
+---
+- name: Ensure NFS utilities are installed.
+  apt:
+    name:
+      - nfs-common
+      - nfs-kernel-server
+    state: present
+...

@@ -1,0 +1,4 @@
+# Variable values for Debain distributions.
+---
+nfs_server_daemon: nfs-kernel-server
+...

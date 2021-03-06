@@ -1,0 +1,91 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+- include_tasks: elasticsearch-prerequisites.yml
+  when: 
+    - elasticsearch_eligible is defined
+    - elasticsearch_eligible | bool
+  register: elasticsearch_prerequisites
+
+- include_tasks: setup-RedHat.yml
+  when: 
+    - ansible_os_family == 'RedHat'
+    - node_config_mode == 'normal'
+
+- include_tasks: setup-Debian.yml
+  when: 
+    - ansible_os_family == 'Debian'
+    - node_config_mode == 'normal'
+
+- name: Ensure docker is started and enabled at boot.
+  service:
+    name: docker
+    state: "{{ docker_service_state }}"
+    enabled: "{{ docker_service_enabled }}"
+  when:
+    - node_config_mode == 'normal'
+  register: docker_enable
+
+- name: Check docker daemon json exists in remote machine.
+  stat:
+    path: /etc/docker/daemon.json
+  register: daemon_json
+
+- name: Copy the docker daemon json to the remote machine.
+  template:
+    src: docker-daemon-json.j2
+    dest: /etc/docker/daemon.json
+  when: 
+    - not daemon_json.stat.exists
+  register: add_daemon_json
+
+- name: Ensures docker.service.d dir exists
+  file: path=/etc/systemd/system/docker.service.d/ state=directory
+
+- name: Copy systemd docker proxy config to the remote machine.
+  template:
+    src: systemd-docker-proxy.j2
+    dest: /etc/systemd/system/docker.service.d/systemd-docker-proxy.conf
+  when: 
+    - proxy_setting is defined
+  register: add_systemd_docker_proxy
+
+- name: Restart service docker also issue daemon-reload to pick up proxy settings
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+  when: 
+    - add_systemd_docker_proxy['changed'] | bool
+
+- name: Restart docker service to get the effect of daemon json.
+  service:
+    name: docker
+    state: restarted
+  when: add_daemon_json['changed'] | bool
+
+- include_tasks: docker-users.yml
+  when: docker_users is defined
+
+- name: Restart node to get the effect of docker install and user adding to docker group.
+  reboot:
+  when: (docker_enable is defined and docker_enable['changed'] | bool) or (docker_user_add['changed'] | bool) or (elasticsearch_prerequisites is defined and elasticsearch_prerequisites['changed'] | bool)
+
+- include_tasks: docker-compose.yml
+  when: 
+    - node_config_mode == 'normal'
+    - docker_install_compose | bool
+
+- include_tasks: python-modules.yml
+  when: 
+    - node_config_mode == 'normal'
+    - install_python_modules | bool
+
+- name: Make sure prerequisite unzip is installed on the machine.
+  package: 
+    name: unzip
+    state: present
+  when:
+    - inventory_hostname in groups['manager_nodes']
+...

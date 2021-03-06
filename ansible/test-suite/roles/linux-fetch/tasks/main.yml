@@ -1,0 +1,10 @@
+---
+# Fetch a given file/folder from a remote host
+
+- name: Fetch folder from remote host
+  fetch:
+    src: '{{source_location}}'
+    dest: '{{destination_location}}'
+    flat: '{{with_flat}}'
+  become: '{{become_root}}'
+...

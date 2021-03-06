@@ -1,0 +1,15 @@
+---
+- debug:
+    var: command_directory
+
+- debug:
+    var: remote_command
+
+- name: Run shell command
+  shell: 'cd {{command_directory}} && {{remote_command}}'
+  register: command_output
+
+- debug:
+    msg: "Command executed: {{command_output.stdout}}"
+  when: (show_output | bool)
+...

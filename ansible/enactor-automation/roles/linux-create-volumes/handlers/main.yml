@@ -1,0 +1,6 @@
+# Handlers get executed after they are notified by a role task.
+# Handler task are used mainly for post-processing jobs.
+---
+- name: reload nfs
+  command: 'exportfs -ra'
+...

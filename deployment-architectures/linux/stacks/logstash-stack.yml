@@ -1,0 +1,79 @@
+---
+version: "3.7"
+
+networks:
+  enactor-stack-overlay:
+    name: enactor-stack-overlay
+
+volumes:
+  logstash-data:
+    name: logstash-data
+
+configs:
+  logstash-pipeline-gelf:
+    file: ./envs/monitoring/logstash/pipeline/gelf.conf
+  logstash-pipeline-beats:
+    file: ./envs/monitoring/logstash/pipeline/beats.conf
+  logstash-config:
+    file: ./envs/monitoring/logstash/config/logstash.yml
+  logstash-pipelines:
+    file: ./envs/monitoring/logstash/config/pipelines.yml
+  
+services: 
+  logstash:
+    image: enactordev-on.azurecr.io/enactorbase/lin/logstash:2.6.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: []  
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: rollback
+        monitor: 60s
+        max_failure_ratio: 0.3
+      rollback_config:
+        parallelism: 1
+        delay: 240s
+        failure_action: continue
+        monitor: 60s
+        max_failure_ratio: 0.3
+    ports:
+      - target: 12201     # port for gelf 
+        published: 12201
+        mode: ingress   
+      - target: 5044     # port for beats 
+        published: 5044
+        mode: ingress
+      - target: 9600     # port for web api calls
+        published: 9600
+        mode: ingress
+    networks:
+      - enactor-stack-overlay
+    volumes:
+      - logstash-data:/usr/share/logstash/data
+    configs:
+      - source: logstash-pipeline-gelf
+        target: /usr/share/logstash/pipeline/configs/gelf.conf
+        mode: 0555
+      - source: logstash-pipeline-beats
+        target: /usr/share/logstash/pipeline/configs/beats.conf 
+        mode: 0555
+      - source: logstash-config
+        target: /usr/share/logstash/config/logstash.yml 
+        mode: 0555
+      - source: logstash-pipelines
+        target: /usr/share/logstash/config/pipelines.yml
+        mode: 0555
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024k"
+        max-file: "3"
+...

@@ -1,0 +1,12 @@
+# Task to obtain swarm join token for managers.
+---
+- name: Get the manager join-token.
+  win_shell: docker swarm join-token -q manager
+  changed_when: false
+  register: swarm_manager_token
+  delegate_to: "{{ groups['manager_nodes'][0] }}"
+  delegate_facts: true
+  when: 
+    - "'manager_nodes' in group_names"
+    - "inventory_hostname != groups['manager_nodes'][0]"
+...

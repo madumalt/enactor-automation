@@ -1,0 +1,9 @@
+---
+host_group: 'tester_nodes'
+
+container_name: 'test-suite'
+fail_when_running: yes
+fetch_container_logs: no
+container_status_file: 'response.json'
+container_logs_file: 'test-suite.log'
+...

@@ -1,0 +1,8 @@
+# This file is where you define your pipelines. You can define multiple.
+# For more information on multiple pipelines, see the documentation:
+# https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
+
+- pipeline.id: beats_pipeline
+  path.config: "/usr/share/logstash/pipeline/configs/beats.conf"
+- pipeline.id: gelf_pipeline
+  path.config: "/usr/share/logstash/pipeline/configs/gelf.conf"

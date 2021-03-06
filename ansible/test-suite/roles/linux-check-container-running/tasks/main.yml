@@ -1,0 +1,18 @@
+---
+- name: Get status of container
+  shell: docker inspect {{container_name}}
+  register: result
+  ignore_errors: yes
+
+- local_action: copy content="{{result.stdout}}" dest="{{container_status_file}}"
+
+- name: Fetch container logs
+  shell: docker logs {{container_name}}
+  register: container_logs
+  when:
+    - (fetch_container_logs|bool)
+
+- local_action: copy content="{{container_logs.stdout}}" dest="{{container_logs_file}}"
+  when:
+    - (fetch_container_logs|bool)
+...

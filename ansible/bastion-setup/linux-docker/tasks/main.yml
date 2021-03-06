@@ -1,0 +1,36 @@
+# Entry point of an ansible-role. This includes the main tasks list of the role.
+# For the convenience tasks can be grouped in seperate files along-side the main.yml file.
+# From those files tasks can be included here using include_tasks.
+---
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Install docker.
+  package:
+    name: "{{ docker_package }}"
+    state: "{{ docker_package_state }}"
+  register: install_docker
+
+- name: Ensure docker is started and enabled at boot.
+  service:
+    name: docker
+    state: "{{ docker_service_state }}"
+    enabled: "{{ docker_service_enabled }}"
+  register: docker_enable
+
+- include_tasks: docker-users.yml
+  when: docker_users
+
+- name: Restart node to get the effect of docker install and user adding to docker group.
+  reboot:
+  when: docker_enable['changed'] | bool or docker_user_add['changed'] | bool
+
+- include_tasks: docker-compose.yml
+  when: docker_install_compose | bool
+
+- include_tasks: python-modules.yml
+  when: install_python_modules | bool
+...

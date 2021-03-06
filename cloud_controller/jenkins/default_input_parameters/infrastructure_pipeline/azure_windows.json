@@ -1,0 +1,42 @@
+{
+    "resource_identifier": "${customer}-${enviroment}",
+    "vpc": {
+        "vpc_identifier": "vpc",
+        "address_range": "10.0.1.0/24"
+    },
+    "subnets": [
+        {
+            "type": "public",
+            "subnet_identifier": "subnet-main",
+            "address_range": "10.0.1.0/25"
+        }
+    ],
+    "machines": [
+        {
+            "host_os": "windows",
+            "host_category": "manager",
+            "subnet_identifier": "subnet-main",
+            "host_label": "leader",
+            "host_size": "Standard_E2s_v3",
+            "disk_size": "127",
+            "password": "REPLACE_THIS",
+            "inventory_variables":{
+                "docker_node_labels":"all=true",
+                "allow_service_deployment":"true"
+            }
+        },
+        {
+            "host_os": "windows",
+            "host_category": "worker",
+            "subnet_identifier": "subnet-main",
+            "host_label": "worker",
+            "host_size": "Standard_E2s_v3",
+            "disk_size": "127",
+            "password": "REPLACE_THIS",
+            "inventory_variables":{
+                "docker_node_labels":"all=true",
+                "allow_service_deployment":"false"
+            }
+        }
+    ]
+}
