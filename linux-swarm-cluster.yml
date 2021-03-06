@@ -1,9 +1,0 @@
----
-- name: Playbook to setup swarm for linux based systems.
-  hosts: 
-    - manager_nodes
-    - worker_nodes
-
-  roles:
-    - linux-swarm-cluster
-...

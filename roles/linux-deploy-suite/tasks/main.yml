@@ -1,7 +1,0 @@
----
-- include_tasks: copy-zip.yml
-  when: "inventory_hostname == groups['manager_nodes'][0]"
-
-- include_tasks: deploy-suite.yml
-  when: "inventory_hostname == groups['manager_nodes'][0]"
-...

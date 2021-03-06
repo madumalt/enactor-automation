@@ -1,8 +1,0 @@
----
-- name: Playbook to deploy enactor-suite on linux based systems.
-  hosts: 
-    - manager_nodes
-
-  roles:
-    - linux-deploy-suite
-...
